@@ -10,5 +10,7 @@ proc readHtml(dirName: string): string =
 routes:
   get "/":
     resp readHtml("index")
-  get "/test":
-    resp readHtml("test")
+  get "/login":
+    resp readHtml("login")
+  get "/register":
+    resp readHtml("register")

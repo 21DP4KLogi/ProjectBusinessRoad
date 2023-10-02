@@ -1,14 +1,13 @@
 <script setup>
-    import { createApp, ref } from 'vue'
-    const msg = ref('Hello World!')
-    function onButtonClick() {
-        window.location = '/test';
-    }
+    // import { createApp, ref } from 'vue'
+    // const msg = ref('Hello World!')
 </script>
 
 <template>
-    <h1>{{msg}}</h1>
-    <button v-on:click="onButtonClick()">Go to another page</button>
+    <h1>Welcome to Business Road!</h1>
+    <p><i>Generic but somewhat exciting description!</i></p>
+    <button>Login</button>
+    <button>Register</button>
 </template>
 
 <style>
