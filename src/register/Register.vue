@@ -1,4 +1,7 @@
 <script setup>
+    function RegisterInfoSubmitted() {
+        window.location.href = "/test"
+    }
 </script>
 
 <template>
@@ -12,7 +15,8 @@
     <input type="password">
     <p>Confirm password</p>
     <input type="password">
-    <button>Register</button>
+    <br>
+    <button v-on:click="RegisterInfoSubmitted()">Register</button>
     <p><i>Already have an account? <a href="/login">Login here!</a></i></p>
 </template>
 
