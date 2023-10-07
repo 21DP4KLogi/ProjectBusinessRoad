@@ -14,3 +14,5 @@ routes:
     resp readHtml("login")
   get "/register":
     resp readHtml("register")
+  get "/test":
+    resp readHtml("test")
