@@ -14,13 +14,13 @@
 </script>
 
 <template>
-    <h1>Welcome to Business Road!</h1>
+    <button v-on:click="goToLoginPage()" class="button">Login</button>
+    <button v-on:click="goToRegisterPage()" class="button">Register</button>
+    <h1 id="title">Welcome to Business Road!</h1>
     <div id="motd">
-        <p><i><q id="motdQuote"></q></i></p>
+        <p><i>~&nbsp;<q id="motdQuote"></q></i></p>
     </div>
-    <button v-on:click="goToLoginPage()">Login</button>
-    <button v-on:click="goToRegisterPage()">Register</button>
 </template>
 
-<style>
+<style src="public/index_style.css">
 </style>
