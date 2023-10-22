@@ -14,8 +14,8 @@
 </script>
 
 <template>
-    <button v-on:click="goToLoginPage()" class="button">Login</button>
-    <button v-on:click="goToRegisterPage()" class="button">Register</button>
+    <button v-on:click="goToLoginPage()" class="Rbutton">Login</button>
+    <button v-on:click="goToRegisterPage()" class="Rbutton">Register</button>
     <h1 id="title">Welcome to Business Road!</h1>
     <div id="motd">
         <p><i>~&nbsp;<q id="motdQuote"></q></i></p>

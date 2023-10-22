@@ -15,9 +15,17 @@ body {
 		margin-top: 0.5rem;
 	}
 }
-.button {
+.Rbutton {
 	float: right;
 	height: 2rem;
 	width: 15vw;
 	margin-right: 2rem;
+}
+#infosubmitbutton {
+	margin-top: 1rem;
+	height: 2rem;
+	width: 7vw;
+}
+.inputboxtitle {
+	margin-bottom: 8px;
 }

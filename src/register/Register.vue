@@ -5,20 +5,20 @@
 </script>
 
 <template>
-    <h1>Business Road</h1>
+    <h1 id="title">Business Road</h1>
     <h3>Register to Business Road</h3>
-    <p>Username</p>
+    <p class="inputboxtitle">Username</p>
     <input type="text">
-    <p>Email</p>
+    <p class="inputboxtitle">Email</p>
     <input type="email">
-    <p>Password</p>
+    <p class="inputboxtitle">Password</p>
     <input type="password">
-    <p>Confirm password</p>
+    <p class="inputboxtitle">Confirm password</p>
     <input type="password">
     <br>
-    <button v-on:click="RegisterInfoSubmitted()">Register</button>
+    <button v-on:click="RegisterInfoSubmitted()" id="infosubmitbutton">Register</button>
     <p><i>Already have an account? <a href="/login">Login here!</a></i></p>
 </template>
 
-<style>
+<style src="public/index_style.css">
 </style>
