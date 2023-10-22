@@ -1,6 +1,12 @@
 <script setup>
-    function LoginInfoSubmitted() {
-        window.location.href = "/test"
+    async function LoginInfoSubmitted() {
+        const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "Login Info Submitted"
+        };
+        await fetch("/login", requestOptions);
+        window.location.href = "/test";
     }
 </script>
 

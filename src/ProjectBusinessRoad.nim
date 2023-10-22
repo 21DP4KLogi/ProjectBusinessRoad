@@ -15,6 +15,9 @@ routes:
     resp readHtml("index")
   get "/login":
     resp readHtml("login")
+  post "/login":
+    echo "POST received: " & $request.body
+    resp(Http200, "POST req. received")
   get "/register":
     resp readHtml("register")
   get "/test":
