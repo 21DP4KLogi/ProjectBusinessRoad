@@ -1,22 +1,21 @@
 <script setup>
     async function SendRegisterInfo() {
-        const username = document.getElementById("usernameInput");
-        const password = document.getElementById("passwordInput");
-        const confirmPassword = document.getElementById("confirmPassInput");
-        if (password.value != confirmPassword.value) {
+        const usernameField = document.getElementById("usernameInput");
+        const passwordField = document.getElementById("passwordInput");
+        const confirmPasswordField = document.getElementById("confirmPassInput");
+        if (passwordField.value != confirmPasswordField.value) {
             console.log("Passwords don't match!");
             return;
         }
-        if (password.value.length < 8) {
+        if (passwordField.value.length < 8) {
             console.log("Password too short")
             return;
         }
         await fetch("/register", {
             method : "POST",
-            // headers = "application/json; charset=UTF-8",
             body : JSON.stringify({
-                username: username.value,
-                password: password.value
+                username: usernameField.value,
+                password: passwordField.value
                 })
             }
         )
