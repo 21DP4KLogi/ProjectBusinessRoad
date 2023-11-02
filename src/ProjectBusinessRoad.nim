@@ -2,6 +2,7 @@ import jester
 import std/[segfaults, strutils, random]
 import norm/[model, sqlite]
 import checksums/bcrypt
+import json
 
 type
   User = ref object of Model
