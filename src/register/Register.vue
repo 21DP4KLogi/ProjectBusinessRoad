@@ -11,7 +11,7 @@
             console.log("Password too short")
             return;
         }
-        await fetch("/register", {
+        await fetch("/register/submitinfo", {
             method : "POST",
             body : JSON.stringify({
                 username: usernameField.value,
@@ -28,7 +28,7 @@
     <h3>Register to Business Road</h3>
     <p class="inputboxtitle">Username</p>
     <input id="usernameInput" type="text">
-    <button>Check availability</button>
+    <button v-on:click="CheckNameAvailability()">Check availability</button>
     <p class="inputboxtitle">Password</p>
     <input id="passwordInput" type="password">
     <p class="inputboxtitle">Confirm password</p>

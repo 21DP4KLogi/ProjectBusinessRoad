@@ -22,13 +22,13 @@ routes:
     resp(Http200, "POST req. received")
   get "/register":
     resp readHtml("register")
-  post "/register":
+  post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
     if registerInfo["username"].len < 8:
       resp Http400
     echo("Username: " & $registerInfo["username"] &
     "\nBCrypted password: " & $bcrypt($registerInfo["password"], generateSalt(6)))  # Low salt level for testing purposes
-    resp Http200
+      resp Http200
   get "/test":
     resp readHtml("test")
   get "/motd":
