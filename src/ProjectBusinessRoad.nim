@@ -1,5 +1,7 @@
 import jester
 import std/[segfaults, strutils, random]
+import json
+import checksums/bcrypt
 
 settings:
   staticDir = "dist"
@@ -20,6 +22,11 @@ routes:
     resp(Http200, "POST req. received")
   get "/register":
     resp readHtml("register")
+  post "/register":
+    let registerInfo = parseJson(request.body)
+    echo("Username: " & $registerInfo["username"] &
+    "\nBCrypted password: " & $bcrypt($registerInfo["password"], generateSalt(6)))  # Low salt level for testing purposes
+    resp Http200
   get "/test":
     resp readHtml("test")
   get "/motd":

@@ -7,14 +7,14 @@
             console.log("Passwords don't match!");
             return;
         }
-        await fetch(
-            "/Register",
-            method = "POST",
-            body= JSON.stringify({
+        await fetch("/register", {
+            method : "POST",
+            // headers = "application/json; charset=UTF-8",
+            body : JSON.stringify({
                 username: username.value,
                 password: password.value
-                }
-            )
+                })
+            }
         )
 
     }

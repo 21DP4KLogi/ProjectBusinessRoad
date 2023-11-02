@@ -12,3 +12,4 @@ bin           = @["ProjectBusinessRoad"]
 
 requires "nim >= 2.0.0"
 requires "jester"
+requires "checksums"
