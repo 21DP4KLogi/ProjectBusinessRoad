@@ -1,8 +1,8 @@
 <script setup>
-    async function SendRegisterInfo() {
+    async function SendLoginInfo() {
         const usernameField = document.getElementById("usernameInput");
         const passwordField = document.getElementById("passwordInput");
-        await fetch("/register/submitinfo", {
+        await fetch("/login/submitinfo", {
             method : "POST",
             body : JSON.stringify({
                 username: usernameField.value,
@@ -19,9 +19,9 @@
     <p class="inputboxtitle">Username</p>
     <input type="text" id="usernameInput">
     <p class="inputboxtitle">Password</p>
-    <input type="password" id="passwordinput">
+    <input type="password" id="passwordInput">
     <br>
-    <button v-on:click="SendRegisterInfo()" id="infosubmitbutton">Login</button>
+    <button v-on:click="SendLoginInfo()" id="infosubmitbutton">Login</button>
     <p><i>Don't have an account? <a href="/register">Register here!</a></i></p>
 </template>
 
