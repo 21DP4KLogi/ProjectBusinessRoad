@@ -7,6 +7,10 @@
             console.log("Passwords don't match!");
             return;
         }
+        if (password.value.length < 8) {
+            console.log("Password too short")
+            return;
+        }
         await fetch("/register", {
             method : "POST",
             // headers = "application/json; charset=UTF-8",
