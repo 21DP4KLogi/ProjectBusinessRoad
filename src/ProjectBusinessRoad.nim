@@ -24,10 +24,10 @@ routes:
     resp readHtml("register")
   post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
-    if registerInfo["username"].len < 8:
-      resp Http400
-    echo("Username: " & $registerInfo["username"] &
-    "\nBCrypted password: " & $bcrypt($registerInfo["password"], generateSalt(6)))  # Low salt level for testing purposes
+    if registerInfo["password"].getStr.len < 8:
+      resp(Http400, "Password too short")
+    echo("Username: " & registerInfo["username"].getStr &
+    "\nBCrypted password: " & $bcrypt(registerInfo["password"].getStr, generateSalt(6)))  # Low salt level for testing purposes
     resp Http200
   post "/register/checkname":
     if request.body.len == 0:
