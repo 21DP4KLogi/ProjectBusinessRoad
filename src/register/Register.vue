@@ -19,8 +19,8 @@
                 })
             }
         )
-
     }
+    
     async function CheckNameAvailability() {
         const usernameField = document.getElementById("usernameInput");
         if (usernameField.value == "") {

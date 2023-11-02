@@ -1,12 +1,15 @@
 <script setup>
-    async function LoginInfoSubmitted() {
-        const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "Login Info Submitted"
-        };
-        await fetch("/login", requestOptions);
-        window.location.href = "/test";
+    async function SendRegisterInfo() {
+        const usernameField = document.getElementById("usernameInput");
+        const passwordField = document.getElementById("passwordInput");
+        await fetch("/register/submitinfo", {
+            method : "POST",
+            body : JSON.stringify({
+                username: usernameField.value,
+                password: passwordField.value
+                })
+            }
+        )
     }
 </script>
 
@@ -14,11 +17,11 @@
     <h1 id="title"><a href="/" title="Click to go back to the Main Page">Business Road</a></h1>
     <h3>Login to Business Road</h3>
     <p class="inputboxtitle">Username</p>
-    <input type="text" id="usernameinput">
+    <input type="text" id="usernameInput">
     <p class="inputboxtitle">Password</p>
     <input type="password" id="passwordinput">
     <br>
-    <button v-on:click="LoginInfoSubmitted()" id="infosubmitbutton">Login</button>
+    <button v-on:click="SendRegisterInfo()" id="infosubmitbutton">Login</button>
     <p><i>Don't have an account? <a href="/register">Register here!</a></i></p>
 </template>
 
