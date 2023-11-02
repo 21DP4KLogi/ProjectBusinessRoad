@@ -13,8 +13,8 @@
 <template>
     <h1 id="title">Business Road</h1>
     <h3>Login to Business Road</h3>
-    <p class="inputboxtitle">Email</p>
-    <input type="email" id="emailinput">
+    <p class="inputboxtitle">Username</p>
+    <input type="text" id="usernameinput">
     <p class="inputboxtitle">Password</p>
     <input type="password" id="passwordinput">
     <br>

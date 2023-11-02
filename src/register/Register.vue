@@ -9,8 +9,7 @@
     <h3>Register to Business Road</h3>
     <p class="inputboxtitle">Username</p>
     <input type="text">
-    <p class="inputboxtitle">Email</p>
-    <input type="email">
+    <button>Check availability</button>
     <p class="inputboxtitle">Password</p>
     <input type="password">
     <p class="inputboxtitle">Confirm password</p>
