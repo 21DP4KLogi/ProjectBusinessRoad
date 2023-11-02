@@ -21,6 +21,18 @@
         )
 
     }
+    async function CheckNameAvailability() {
+        const usernameField = document.getElementById("usernameInput");
+        if (usernameField.value == "") {
+            console.log("Username field is empty")
+            return
+        }
+        await fetch("/register/checkname", {
+            method : "POST",
+            body : usernameField.value
+            }
+        )
+    }
 </script>
 
 <template>
