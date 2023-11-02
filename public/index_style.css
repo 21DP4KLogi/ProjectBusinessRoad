@@ -7,6 +7,9 @@ body {
 	width: 50vw;
 	text-indent: 2rem;
 	margin-bottom: 0;
+	:is(a) {
+		color: black;
+	}
 }
 #motd {
 	width: 50vw;
