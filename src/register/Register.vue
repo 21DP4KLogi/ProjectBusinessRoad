@@ -5,7 +5,7 @@
 </script>
 
 <template>
-    <h1 id="title">Business Road</h1>
+    <h1 id="title"><a href="/" title="Click to go back to the Main Page">Business Road</a></h1>
     <h3>Register to Business Road</h3>
     <p class="inputboxtitle">Username</p>
     <input type="text">
