@@ -7,11 +7,10 @@ import json
 type
   User = ref object of Model
     username: string
-    email: string
     password: string
 
-func newUser(un = "", em = "", pw = ""): User =
-  User(username: un, email: em, password: pw)
+func newUser(un = "", pw = ""): User =
+  User(username: un, password: pw)
 
 settings:
   staticDir = "dist"
@@ -30,23 +29,18 @@ routes:
     resp readHtml("index")
   get "/login":
     resp readHtml("login")
-  post "/login":
-    var userList: seq[User] = @[newUser()]
-    var newLoggedUser = newUser($request.body, $request.body, $bcrypt($request.body, generateSalt(8)))
-    dbConn.insert(newLoggedUser)
-    dbConn.selectAll(userList)
-    for i in userList:
-      echo $i.id & " " & i.username
-      echo i.password
+  post "/login/submitinfo":
+    
     resp(Http200, "POST req. received")
   get "/register":
     resp readHtml("register")
   post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
-    if registerInfo["username"].len < 8:
+    if registerInfo["password"].getStr.len < 8:
       resp Http400
-    echo("Username: " & $registerInfo["username"] &
-    "\nBCrypted password: " & $bcrypt($registerInfo["password"], generateSalt(6)))  # Low salt level for testing purposes
+    let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(6))  # Low password salt for testing purposes
+    var newRegisteredUser = newUser(registerInfo["username"].getStr, hashedPassword)
+    dbConn.insert(newRegisteredUser)
     resp Http200
   post "/register/checkname":
     if request.body.len == 0:
