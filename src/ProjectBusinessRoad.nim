@@ -21,6 +21,9 @@ proc readHtml(dirName: string): string =
 proc getRandMOTD(): string =
   return readFile("src/homepage_messages.txt").splitLines.sample()
 
+proc nameIsAvailable(database: DbConn, username: string): bool =
+  return database.count(User, "*", dist = false, "username = ?", username) == 0
+
 let dbConn = open(":memory:", "", "", "")
 dbConn.createTables(newUser())
 
@@ -34,7 +37,7 @@ routes:
     let nameInput = loginInfo["username"].getStr
     let passInput = loginInfo["password"].getStr
     var userLoginAttempt = newUser()
-    if dbConn.count(User, "*", dist = false, "username = ?", nameInput) == 0:  # dist = false because name uniqueness is not checked
+    if dbConn.nameIsAvailable(nameInput):
       resp Http400
     dbConn.select(userLoginAttempt, "username = ?", nameInput)
     let loginSuccessful = bcrypt.verify(passInput, userLoginAttempt.password)
@@ -55,10 +58,9 @@ routes:
     dbConn.insert(newRegisteredUser)
     resp Http200
   post "/register/checkname":
-    if request.body.len == 0:
+    if not dbConn.nameIsAvailable(request.body):
       resp Http400
     else:
-      # Code for checking availability
       resp Http200
   get "/test":
     resp readHtml("test")
