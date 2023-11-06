@@ -30,8 +30,20 @@ routes:
   get "/login":
     resp readHtml("login")
   post "/login/submitinfo":
-    
-    resp(Http200, "POST req. received")
+    let loginInfo = parseJson(request.body)
+    let nameInput = loginInfo["username"].getStr
+    let passInput = loginInfo["password"].getStr
+    var userLoginAttempt = newUser()
+    if dbConn.count(User, "*", dist = false, "username = ?", nameInput) == 0:  # dist = false because name uniqueness is not checked
+      resp Http400
+    dbConn.select(userLoginAttempt, "username = ?", nameInput)
+    let loginSuccessful = bcrypt.verify(passInput, userLoginAttempt.password)
+    if loginSuccessful:
+      echo "Successful login"
+      resp Http200
+    else:
+      echo "Failed login"
+      resp Http400
   get "/register":
     resp readHtml("register")
   post "/register/submitinfo":
