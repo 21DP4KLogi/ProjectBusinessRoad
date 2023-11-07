@@ -32,3 +32,9 @@ body {
 .inputboxtitle {
 	margin-bottom: 8px;
 }
+#subtabs {
+	margin-right: 50vw;
+}
+#usernameInput {
+	margin-right: 8px;
+}

@@ -1,5 +1,5 @@
 <template>
-    <h2>This is a description for the game</h2>
+    <h3>This is a description for the game</h3>
     <p>Call me Ishmael. Some years ago—never mind how long precisely—having
 little or no money in my purse, and nothing particular to interest me
 on shore, I thought I would sail about a little and see the watery part

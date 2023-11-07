@@ -29,9 +29,12 @@
         <p><i>~&nbsp;<q id="motdQuote"></q></i></p>
     </div>
     <hr>
-    <loginPage v-if="openedSubtab == 'login'" />
-    <registerPage v-if="openedSubtab == 'register'" />
-    <DescriptionPage v-if="openedSubtab == 'desc'"/>
+    <div id="subtabs">
+        <loginPage v-if="openedSubtab == 'login'" />
+        <registerPage v-if="openedSubtab == 'register'" />
+        <DescriptionPage v-if="openedSubtab == 'desc'"/>
+    </div>
+    
 </template>
 
 <style src="public/index_style.css">
