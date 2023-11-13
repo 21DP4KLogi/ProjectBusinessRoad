@@ -53,6 +53,8 @@ routes:
     let registerInfo = parseJson(request.body)
     if registerInfo["password"].getStr.len < 8:
       resp Http400
+    if not dbConn.nameIsAvailable(registerInfo["username"].getStr):
+      resp Http400
     let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(6))  # Low password salt for testing purposes
     var newRegisteredUser = newUser(registerInfo["username"].getStr, hashedPassword)
     dbConn.insert(newRegisteredUser)
