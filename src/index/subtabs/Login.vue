@@ -1,8 +1,10 @@
 <script setup>
+    import { ref } from 'vue'
+    const submitError = ref('')
     async function SendLoginInfo() {
         const usernameField = document.getElementById("usernameInput");
         const passwordField = document.getElementById("passwordInput");
-        await fetch("/login/submitinfo", {
+        let response = await fetch("/login/submitinfo", {
             method : "POST",
             body : JSON.stringify({
                 username: usernameField.value,
@@ -10,6 +12,14 @@
                 })
             }
         )
+        if (response.ok) {
+          submitError.value = "Successfully logged in!"
+        } else if (response.status == 400) {
+            submitError.value = "Incorrect login information"
+        } else {
+            submitError.value = "HTTP error, status code: " + str(response.status)
+        }
+
     }
 </script>
 
@@ -20,6 +30,7 @@
     <p class="inputboxtitle">Password</p>
     <input type="password" id="passwordInput">
     <br>
+    <p v-if="submitError.value != ''">{{ submitError }}</p>
     <button v-on:click="SendLoginInfo()" id="infosubmitbutton">Login</button>
 </template>
 

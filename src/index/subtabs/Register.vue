@@ -22,14 +22,14 @@
             }
         )
         if (response.ok) {
-            submitError.value = ''
+            submitError.value = 'Successfully registered! Please log in.'
         } else if (response.status == 400) {
             submitError.value = "Register info not valid."
         } else {
             submitError.value = "HTTP error, status code: " + str(response.status)
         }
     }
-    
+
     async function CheckNameAvailability() {
         const usernameField = document.getElementById("usernameInput");
         if (usernameField.value == "") {
