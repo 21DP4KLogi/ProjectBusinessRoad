@@ -13,7 +13,8 @@
             }
         )
         if (response.ok) {
-          submitError.value = "Successfully logged in!"
+          submitError.value = "Success! Going to the game page..."
+          window.location.href = "/game"
         } else if (response.status == 400) {
             submitError.value = "Incorrect login information"
         } else {
@@ -30,8 +31,8 @@
     <p class="inputboxtitle">Password</p>
     <input type="password" id="passwordInput">
     <br>
-    <p v-if="submitError.value != ''">{{ submitError }}</p>
     <button v-on:click="SendLoginInfo()" id="infosubmitbutton">Login</button>
+    <p v-if="submitError.value != ''">{{ submitError }}</p>
 </template>
 
 <style src="public/index_style.css">
