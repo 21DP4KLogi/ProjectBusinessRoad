@@ -53,7 +53,8 @@ routes:
     let registerInfo = parseJson(request.body)
     if registerInfo["password"].getStr.len < 8:
       resp Http400
-    let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(6))  # Low password salt for testing purposes
+    let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(
+        6)) # Low password salt for testing purposes
     var newRegisteredUser = newUser(registerInfo["username"].getStr, hashedPassword)
     dbConn.insert(newRegisteredUser)
     resp Http200
@@ -62,7 +63,7 @@ routes:
       resp Http400
     else:
       resp Http200
-  get "/test":
-    resp readHtml("test")
+  get "/game":
+    resp readHtml("game")
   get "/motd":
     resp getRandMOTD()
