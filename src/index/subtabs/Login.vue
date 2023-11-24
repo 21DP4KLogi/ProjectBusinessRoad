@@ -1,8 +1,10 @@
 <script setup>
+    import { ref } from 'vue'
+    const submitError = ref('')
     async function SendLoginInfo() {
         const usernameField = document.getElementById("usernameInput");
         const passwordField = document.getElementById("passwordInput");
-        await fetch("/login/submitinfo", {
+        let response = await fetch("/login/submitinfo", {
             method : "POST",
             body : JSON.stringify({
                 username: usernameField.value,
@@ -10,11 +12,19 @@
                 })
             }
         )
+        if (response.ok) {
+          submitError.value = "Success! Going to the game page..."
+          window.location.href = "/game"
+        } else if (response.status == 400) {
+            submitError.value = "Incorrect login information"
+        } else {
+            submitError.value = "HTTP error, status code: " + str(response.status)
+        }
+
     }
 </script>
 
 <template>
-    <h1 id="title"><a href="/" title="Click to go back to the Main Page">Business Road</a></h1>
     <h3>Login to Business Road</h3>
     <p class="inputboxtitle">Username</p>
     <input type="text" id="usernameInput">
@@ -22,7 +32,7 @@
     <input type="password" id="passwordInput">
     <br>
     <button v-on:click="SendLoginInfo()" id="infosubmitbutton">Login</button>
-    <p><i>Don't have an account? <a href="/register">Register here!</a></i></p>
+    <p v-if="submitError.value != ''">{{ submitError }}</p>
 </template>
 
 <style src="public/index_style.css">

@@ -64,7 +64,7 @@ routes:
       resp Http400
     else:
       resp Http200
-  get "/test":
-    resp readHtml("test")
+  get "/game":
+    resp readHtml("game")
   get "/motd":
     resp getRandMOTD()

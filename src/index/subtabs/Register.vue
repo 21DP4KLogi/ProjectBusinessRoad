@@ -1,17 +1,19 @@
 <script setup>
+    import { ref } from 'vue'
+    const submitError = ref('')
     async function SendRegisterInfo() {
         const usernameField = document.getElementById("usernameInput");
         const passwordField = document.getElementById("passwordInput");
         const confirmPasswordField = document.getElementById("confirmPassInput");
-        if (passwordField.value != confirmPasswordField.value) {
-            console.log("Passwords don't match!");
-            return;
-        }
         if (passwordField.value.length < 8) {
-            console.log("Password too short")
-            return;
+            submitError.value = "Your password needs to be atleast 8 characters long."
+            return
         }
-        await fetch("/register/submitinfo", {
+        if (passwordField.value != confirmPasswordField.value) {
+            submitError.value = "Passwords don't match."
+            return
+        }
+        let response = await fetch("/register/submitinfo", {
             method : "POST",
             body : JSON.stringify({
                 username: usernameField.value,
@@ -19,24 +21,37 @@
                 })
             }
         )
+        if (response.ok) {
+            submitError.value = 'Successfully registered! Please log in.'
+        } else if (response.status == 400) {
+            submitError.value = "Register info not valid."
+        } else {
+            submitError.value = "HTTP error, status code: " + str(response.status)
+        }
     }
-    
+
     async function CheckNameAvailability() {
         const usernameField = document.getElementById("usernameInput");
         if (usernameField.value == "") {
-            console.log("Username field is empty")
-            return
+            submitError.value = "Input a name to check it's availability"
+            return;
         }
-        await fetch("/register/checkname", {
+        let response = await fetch("/register/checkname", {
             method : "POST",
             body : usernameField.value
             }
         )
+        if (response.ok) {
+            submitError.value = "Name is available!"
+        } else if (response.status == 400) {
+            submitError.value = "Name is not available."
+        } else {
+            submitError.value = "HTTP error, status code: " + str(response.status)
+        }
     }
 </script>
 
 <template>
-    <h1 id="title"><a href="/" title="Click to go back to the Main Page">Business Road</a></h1>
     <h3>Register to Business Road</h3>
     <p class="inputboxtitle">Username</p>
     <input id="usernameInput" type="text">
@@ -47,7 +62,7 @@
     <input id="confirmPassInput" type="password">
     <br>
     <button v-on:click="SendRegisterInfo()" id="infosubmitbutton">Register</button>
-    <p><i>Already have an account? <a href="/login">Login here!</a></i></p>
+    <p v-if="submitError.value != ''">{{ submitError }}</p>
 </template>
 
 <style src="public/index_style.css">

@@ -32,3 +32,12 @@ body {
 .inputboxtitle {
 	margin-bottom: 8px;
 }
+#subtabs {
+	margin-right: 50vw;
+}
+:is(input) {
+	height: 1.5rem;
+	font-size: 1rem;
+	font-family: monospace;
+	margin-right: 8px;
+}
