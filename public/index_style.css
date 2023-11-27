@@ -1,8 +1,11 @@
 body {
-	background-color: lemonchiffon;
+	/* background-color: lemonchiffon; */
 	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-	padding-left: 4rem;
+	/* padding-left: 4rem; */
+	margin: 0;
+	overflow: hidden;
 }
+/*
 #title {
 	width: 50vw;
 	text-indent: 2rem;
@@ -40,4 +43,67 @@ body {
 	font-size: 1rem;
 	font-family: monospace;
 	margin-right: 8px;
+}
+*/
+#topbar {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 10vh;
+	background-color: #fce773;
+	#title {
+		text-align: center;
+		flex: 3;
+		/* margin: 0.5rem; */
+		:is(h1) {
+			margin: 0;
+		}
+		:is(p) {
+			margin: 0;
+			padding-left: 1rem;
+		}
+	}
+	:is(button) {
+		flex: 1;
+		/* height: 100%; */
+		margin: 1rem;
+		height: 60%;
+		border-width: 0.5vh;
+		font-size: 1.5rem;
+		background-color: #ffe863;
+		border-color: goldenrod;
+		&:hover {
+			background-color: #ebd55b;
+		}
+	}
+}
+
+#bottomhalf {
+	display: flex;
+	#bottomleft {
+		flex: 1;
+		height: 90vh;
+		background-color: rgb(81, 199, 134);
+		overflow-y: auto;
+		padding: 2rem;
+	}
+	#bottomright {
+		flex: 1;
+		height: 90vh;
+		background-color: rgb(76, 177, 122);
+	}
+}
+:is(input) {
+	height: 1.5rem;
+	font-size: 1rem;
+	font-family: monospace;
+	margin-right: 8px;
+}
+#infosubmitbutton {
+	margin-top: 1rem;
+	height: 2rem;
+	width: 7vw;
+}
+.inputboxtitle {
+	margin-bottom: 8px;
 }

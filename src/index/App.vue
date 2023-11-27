@@ -21,6 +21,25 @@
 </script>
 
 <template>
+    <div id="topbar">
+        <div id="title">
+            <h1>Welcome to Business Road!</h1>
+            <p><i>~&nbsp;<q id="motdQuote"></q></i></p>
+        </div>
+        <button v-on:click="openedSubtab = 'login'">Login</button>
+        <button v-on:click="openedSubtab = 'register'">Register</button>
+        <button v-on:click="openedSubtab = 'desc'">More info</button>
+    </div>
+    <div id="bottomhalf">
+        <div id="bottomleft">
+            <loginPage v-if="openedSubtab == 'login'" />
+            <registerPage v-if="openedSubtab == 'register'" />
+            <DescriptionPage v-if="openedSubtab == 'desc'"/>
+        </div>
+        <div id="bottomright">
+        </div>
+    </div>
+    <!--
     <button v-on:click="openedSubtab = 'login'" class="Rbutton">Login</button>
     <button v-on:click="openedSubtab = 'register'" class="Rbutton">Register</button>
     <button v-on:click="openedSubtab = 'desc'" class="Rbutton">More info</button>
@@ -34,6 +53,7 @@
         <registerPage v-if="openedSubtab == 'register'" />
         <DescriptionPage v-if="openedSubtab == 'desc'"/>
     </div>
+    -->
     
 </template>
 
