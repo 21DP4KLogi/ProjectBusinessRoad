@@ -36,10 +36,10 @@ routes:
     let loginInfo = parseJson(request.body)
     let nameInput = loginInfo["username"].getStr
     let passInput = loginInfo["password"].getStr
-    if nameInput == "" or passInput == "":
+    if nameInput == "" or passInput == "":  # Reject if either input is empty
       resp Http400
     var userLoginAttempt = newUser()
-    if dbConn.nameIsAvailable(nameInput):
+    if dbConn.nameIsAvailable(nameInput):  # Reject if username doesnt exist
       resp Http400
     dbConn.select(userLoginAttempt, "username = ?", nameInput)
     let loginSuccessful = bcrypt.verify(passInput, userLoginAttempt.password)
@@ -53,11 +53,11 @@ routes:
     resp readHtml("register")
   post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
-    if registerInfo["username"].getStr == "":
+    if registerInfo["username"].getStr == "":  # Reject if username string is empty
       resp Http400
-    if registerInfo["password"].getStr.len < 8:
+    if registerInfo["password"].getStr.len < 8:  # Reject if password too short
       resp Http400
-    if not dbConn.nameIsAvailable(registerInfo["username"].getStr):
+    if not dbConn.nameIsAvailable(registerInfo["username"].getStr):  # Reject if username already used
       resp Http400
     let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(6))  # Low password salt for testing purposes
     var newRegisteredUser = newUser(registerInfo["username"].getStr, hashedPassword)
