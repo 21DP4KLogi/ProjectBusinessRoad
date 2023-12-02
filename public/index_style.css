@@ -43,9 +43,9 @@ body {
 		height: 90vh;
 		background-color: rgb(81, 199, 134);
 		overflow-y: auto;
-    padding-top: 1rem;
+    	padding-top: 1rem;
 		padding-left: 1vw;
-    padding-right: 1vw;
+    	padding-right: 1vw;
 	}
 	#bottomright {
 		flex: 4;
@@ -67,4 +67,14 @@ body {
 }
 .inputboxtitle {
 	margin-bottom: 8px;
+}
+/*Not great color choice*/
+.defaultColor {
+	color: black;
+}
+.warningColor {
+	color: firebrick;
+}
+.successColor {
+	color: forestgreen;
 }

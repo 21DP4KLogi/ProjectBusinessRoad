@@ -1,16 +1,32 @@
 <script setup>
     import { ref } from 'vue'
     const submitError = ref('')
+    const submitStatusColor = ref('defaultColor')
+    function setStatusColor(color) {
+        switch(color) {
+            case "default":
+                submitStatusColor.value = "defaultColor"
+                break
+            case "warning":
+                submitStatusColor.value = "warningColor"
+                break
+            case "success":
+                submitStatusColor.value = "successColor"
+                break
+        }
+    }
     async function SendRegisterInfo() {
         const usernameField = document.getElementById("usernameInput");
         const passwordField = document.getElementById("passwordInput");
         const confirmPasswordField = document.getElementById("confirmPassInput");
         if (passwordField.value.length < 8) {
             submitError.value = "Your password needs to be atleast 8 characters long."
+            setStatusColor("warning")
             return
         }
         if (passwordField.value != confirmPasswordField.value) {
             submitError.value = "Passwords don't match."
+            setStatusColor("warning")
             return
         }
         let response = await fetch("/register/submitinfo", {
@@ -23,10 +39,13 @@
         )
         if (response.ok) {
             submitError.value = 'Successfully registered! Please log in.'
+            setStatusColor("success")
         } else if (response.status == 400) {
             submitError.value = "Register info not valid."
+            setStatusColor("warning")
         } else {
             submitError.value = "HTTP error, status code: " + str(response.status)
+            setStatusColor("warning")
         }
     }
 
@@ -34,7 +53,8 @@
         const usernameField = document.getElementById("usernameInput");
         if (usernameField.value == "") {
             submitError.value = "Input a name to check it's availability"
-            return;
+            setStatusColor("default")
+            return
         }
         let response = await fetch("/register/checkname", {
             method : "POST",
@@ -43,10 +63,13 @@
         )
         if (response.ok) {
             submitError.value = "Name is available!"
+            setStatusColor("success")
         } else if (response.status == 400) {
             submitError.value = "Name is not available."
+            setStatusColor("warning")
         } else {
             submitError.value = "HTTP error, status code: " + str(response.status)
+            setStatusColor("warning")
         }
     }
 </script>
@@ -62,7 +85,7 @@
     <input id="confirmPassInput" type="password">
     <br>
     <button v-on:click="SendRegisterInfo()" id="infosubmitbutton">Register</button>
-    <p v-if="submitError.value != ''">{{ submitError }}</p>
+    <p v-if="submitError.value != ''" :class="submitStatusColor">{{ submitError }}</p>
 </template>
 
 <style src="public/index_style.css">
