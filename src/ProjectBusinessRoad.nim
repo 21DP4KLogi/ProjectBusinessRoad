@@ -30,8 +30,6 @@ dbConn.createTables(newUser())
 routes:
   get "/":
     resp readHtml("index")
-  get "/login":
-    resp readHtml("login")
   post "/login/submitinfo":
     let loginInfo = parseJson(request.body)
     let nameInput = loginInfo["username"].getStr
@@ -44,13 +42,9 @@ routes:
     dbConn.select(userLoginAttempt, "username = ?", nameInput)
     let loginSuccessful = bcrypt.verify(passInput, userLoginAttempt.password)
     if loginSuccessful:
-      echo "Successful login"
       resp Http200
     else:
-      echo "Failed login"
       resp Http400
-  get "/register":
-    resp readHtml("register")
   post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
     if registerInfo["username"].getStr == "":  # Reject if username string is empty
@@ -64,10 +58,10 @@ routes:
     dbConn.insert(newRegisteredUser)
     resp Http200
   post "/register/checkname":
-    if not dbConn.nameIsAvailable(request.body):
-      resp Http400
-    else:
+    if dbConn.nameIsAvailable(request.body):
       resp Http200
+    else:
+      resp Http400
   get "/game":
     resp readHtml("game")
   get "/motd":
