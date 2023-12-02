@@ -36,6 +36,8 @@ routes:
     let loginInfo = parseJson(request.body)
     let nameInput = loginInfo["username"].getStr
     let passInput = loginInfo["password"].getStr
+    if nameInput == "" or passInput == "":
+      resp Http400
     var userLoginAttempt = newUser()
     if dbConn.nameIsAvailable(nameInput):
       resp Http400
@@ -51,6 +53,8 @@ routes:
     resp readHtml("register")
   post "/register/submitinfo":
     let registerInfo = parseJson(request.body)
+    if registerInfo["username"].getStr == "":
+      resp Http400
     if registerInfo["password"].getStr.len < 8:
       resp Http400
     if not dbConn.nameIsAvailable(registerInfo["username"].getStr):
