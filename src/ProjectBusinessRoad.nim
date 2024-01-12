@@ -4,13 +4,23 @@ import norm/[model, sqlite]
 import checksums/bcrypt
 import json
 
+const startingMoney: int = 10000
+
 type
   User = ref object of Model
     username: string
     password: string
+    money: int
+  Business = ref object of Model
+    owner: User
+    field: string
+    value: int
 
-func newUser(un = "", pw = ""): User =
-  User(username: un, password: pw)
+func newUser(un = "", pw = "", mn = startingMoney): User =
+  User(username: un, password: pw, money: mn)
+
+func newBusiness(us = newUser(), fl = "", vl = 0): Business =
+  Business(owner: us, field: fl, value: vl)
 
 settings:
   staticDir = "dist"
@@ -24,8 +34,9 @@ proc getRandMOTD(): string =
 proc nameIsAvailable(database: DbConn, username: string): bool =
   return database.count(User, "*", dist = false, "username = ?", username) == 0
 
-let dbConn = open(":memory:", "", "", "")
+let dbConn = open("PBRdata.db", "", "", "")
 dbConn.createTables(newUser())
+dbConn.createTables(newBusiness())
 
 routes:
   get "/":
@@ -66,3 +77,11 @@ routes:
     resp readHtml("game")
   get "/motd":
     resp getRandMOTD()
+  post "/player/money":
+    let playerInfo = parseJson(request.body)
+    # Need code to verify that user token matches one of an authorized user, for now just lets through
+    if dbConn.nameIsAvailable(playerInfo["username"].getStr):
+      resp Http400
+    var playerQuery = newUser()
+    dbConn.select(playerQuery, "username = ?", playerInfo["username"].getStr)
+    resp $playerQuery.money
