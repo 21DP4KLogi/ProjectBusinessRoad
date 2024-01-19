@@ -85,3 +85,5 @@ routes:
     var playerQuery = newUser()
     dbConn.select(playerQuery, "username = ?", playerInfo["username"].getStr)
     resp $playerQuery.money
+
+runForever()
