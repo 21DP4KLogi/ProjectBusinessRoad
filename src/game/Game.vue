@@ -5,9 +5,15 @@
 </script>
 
 <template>
-  <h1>Business Road game page</h1>
-  <button v-on:click="goToMainPage()">Go back</button>
+  <div id="topbar">
+    <div id="title">
+      <h1>Project Business Road</h1>
+    </div>
+    <button v-on:click="goToMainPage()">Log out</button>
+  </div>
+  <div id="bottomhalf">
+  </div>
 </template>
 
-<style>
+<style src="public/game_style.css">
 </style>
