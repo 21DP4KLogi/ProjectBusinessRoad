@@ -22,11 +22,11 @@ func newUser(un = "", pw = "", mn = startingMoney): User =
 func newBusiness(us = newUser(), fl = "", vl = 0): Business =
   Business(owner: us, field: fl, value: vl)
 
-settings:
-  staticDir = "dist"
+# settings:
+#   staticDir = "dist"
 
-proc readHtml(dirName: string): string =
-  return readFile("dist/src/" & dirName & "/index.html")
+# proc readHtml(dirName: string): string =
+#   return readFile("dist/src/" & dirName & "/index.html")
 
 proc getRandMOTD(): string =
   return readFile("src/homepage_messages.txt").splitLines.sample()
@@ -40,7 +40,7 @@ dbConn.createTables(newBusiness())
 
 routes:
   get "/":
-    resp readHtml("index")
+    resp readFile("src/index.html")
   post "/login/submitinfo":
     let loginInfo = parseJson(request.body)
     let nameInput = loginInfo["username"].getStr
@@ -73,8 +73,8 @@ routes:
       resp Http200
     else:
       resp Http400
-  get "/game":
-    resp readHtml("game")
+  # get "/game":
+  #   resp readHtml("game")
   get "/motd":
     resp getRandMOTD()
   post "/player/money":
