@@ -39,9 +39,11 @@ function setOpenedSubtab(subtab) {
 }
 
 async function getMOTD() {
-    const response = await fetch("/motd");
-    const textresp = await response.text();
-    document.getElementById("motdQuote").innerHTML = textresp;
+    if (global.motd == undefined) {
+        const response = await fetch("/motd");
+        global.motd = await response.text();
+    }
+    document.getElementById("motdQuote").innerHTML = global.motd;
 }
 
 function setStatusMessage(message, color) {
@@ -161,4 +163,5 @@ async function openGamePage() {
 
 function openMainPage() {
     document.body.innerHTML = global.mainPage;
+    getMOTD();
 }
