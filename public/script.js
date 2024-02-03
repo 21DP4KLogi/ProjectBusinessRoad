@@ -1,53 +1,35 @@
+var global = {}
+fetchSubtabs()
+
+// This approach might cause problems if the User's internet is too slow,
+// perhaps a loading screen could be useful.
+async function fetchSubtabs() {
+    global.subtabRegister = await fetchComponent("/component/subtabRegister.html")
+    global.subtabLogin = await fetchComponent("/component/subtabLogin.html")
+    global.subtabDesc = await fetchComponent("/component/subtabDesc.html")
+}
+
+
+async function fetchComponent(route) {
+    let response = await fetch(route)
+    if (response.ok) {
+        return await response.text()
+    } else {
+        return str("Error " + str(response.status))
+    }
+}
+
 function setOpenedSubtab(subtab) {
     const bottomLeft = document.getElementById("bottomleft")
     switch (subtab) {
         case "login":
-            bottomLeft.innerHTML = 
-            `   <h3>Login to Business Road</h3>
-            <p class="inputboxtitle">Username</p>
-            <input type="text" id="usernameInput">
-            <p class="inputboxtitle">Password</p>
-            <input type="password" id="passwordInput">
-            <br>
-            <button onclick="SendLoginInfo()" id="infosubmitbutton">Login</button>
-            <p id="requestStatusText"></p>
-            `
+            bottomLeft.innerHTML = global.subtabLogin
             break
         case "register":
-            bottomLeft.innerHTML =
-            `   <h3>Register to Business Road</h3>
-            <p class="inputboxtitle">Username</p>
-            <input id="usernameInput" type="text">
-            <button onclick="CheckNameAvailability()">Check availability</button>
-            <p class="inputboxtitle">Password</p>
-            <input id="passwordInput" type="password">
-            <p class="inputboxtitle">Confirm password</p>
-            <input id="confirmPassInput" type="password">
-            <br>
-            <button onclick="SendRegisterInfo()" id="infosubmitbutton">Register</button>
-            <p id="requestStatusText"></p>
-            `
+            bottomLeft.innerHTML = global.subtabRegister
             break
         case "desc":
-            bottomLeft.innerHTML =
-            `    <h3>This is a description for the game</h3>
-            <p>&emsp;Call me Ishmael. Some years ago—never mind how long precisely—having
-            little or no money in my purse, and nothing particular to interest me
-            on shore, I thought I would sail about a little and see the watery part
-            of the world. It is a way I have of driving off the spleen and
-            regulating the circulation. Whenever I find myself growing grim about
-            the mouth; whenever it is a damp, drizzly November in my soul; whenever
-            I find myself involuntarily pausing before coffin warehouses, and
-            bringing up the rear of every funeral I meet; and especially whenever
-            my hypos get such an upper hand of me, that it requires a strong moral
-            principle to prevent me from deliberately stepping into the street, and
-            methodically knocking people’s hats off—then, I account it high time to
-            get to sea as soon as I can. This is my substitute for pistol and ball.
-            With a philosophical flourish Cato throws himself upon his sword; I
-            quietly take to the ship. There is nothing surprising in this. If they
-            but knew it, almost all men in their degree, some time or other,
-            cherish very nearly the same feelings towards the ocean with me.</p>
-            `
+            bottomLeft.innerHTML = global.subtabDesc
             break
     }
 }
