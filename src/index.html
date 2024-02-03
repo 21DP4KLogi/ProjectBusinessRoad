@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Road</title>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <script>
-        getMOTD();
-    </script>
-</head>
-<body>
-    <div id="topbar">
-        <div id="title">
-            <h1>Welcome to Business Road!</h1>
-            <p><i>~&nbsp;<q id="motdQuote"></q></i></p>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Business Road</title>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <script>
+            addEventListener("DOMContentLoaded", fetchInitialData);
+        </script>
+    </head>
+    <body>
+        <div id="topbar">
+            <div id="title">
+                <h1>Welcome to Business Road!</h1>
+                <p><i>~&nbsp;<q id="motdQuote"></q></i></p>
+            </div>
+            <button onclick="setOpenedSubtab('login')">Login</button>
+            <button onclick="setOpenedSubtab('register')">Register</button>
+            <button onclick="setOpenedSubtab('desc')">More info</button>
         </div>
-        <button onclick="setOpenedSubtab('login')">Login</button>
-        <button onclick="setOpenedSubtab('register')">Register</button>
-        <button onclick="setOpenedSubtab('desc')">More info</button>
-    </div>
-    <div id="bottomhalf">
-        <div id="bottomleft"></div>
-        <div id="bottomright"></div>
-    </div>
-</body>
+        <div id="bottomhalf">
+            <div id="bottomleft"></div>
+            <div id="bottomright"></div>
+        </div>
+    </body>
 </html>

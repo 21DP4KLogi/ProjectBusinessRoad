@@ -1,12 +1,17 @@
 var global = {};
-fetchSubtabs();
 
 // This approach might cause problems if the User's internet is too slow,
 // perhaps a loading screen could be useful.
-async function fetchSubtabs() {
+async function fetchInitialData() {
+    global.mainPage = document.body.innerHTML; // Main page is saved in global upon loading so that a request is not required
+    await getMOTD();
     global.subtabRegister = await fetchComponent("/component/subtabRegister.html");
     global.subtabLogin = await fetchComponent("/component/subtabLogin.html");
     global.subtabDesc = await fetchComponent("/component/subtabDesc.html");
+}
+
+async function getMainPage() {
+    document.body.innerHTML = await fetchComponent("/component/mainPage");
 }
 
 async function fetchComponent(route) {
@@ -68,7 +73,7 @@ async function SendLoginInfo() {
     );
     if (response.ok) {
         setStatusMessage("Success! Going to the game page...", "success");
-        window.location.href = "/game";
+        openGamePage();
     } else if (response.status == 400) {
         setStatusMessage("Incorrect login information", "warning");
     } else {
@@ -124,4 +129,15 @@ async function CheckNameAvailability() {
     } else {
         setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
     }
+}
+
+async function openGamePage() {
+    if (global.gamePage == undefined) {
+        global.gamePage = await fetchComponent("/component/gamePage.html");
+    }
+    document.body.innerHTML = global.gamePage;
+}
+
+function openMainPage() {
+    document.body.innerHTML = global.mainPage;
 }
