@@ -63,6 +63,9 @@ function setStatusMessage(message, color) {
 async function SendLoginInfo() {
     const usernameField = document.getElementById("usernameInput");
     const passwordField = document.getElementById("passwordInput");
+    if (usernameField.value == "" || passwordField.value == "") {
+        setStatusMessage("Please input both the Username and Password", "warning")
+    }
     let response = await fetch("/login/submitinfo", {
         method: "POST",
         body: JSON.stringify({
@@ -72,10 +75,18 @@ async function SendLoginInfo() {
     }
     );
     if (response.ok) {
-        setStatusMessage("Success! Going to the game page...", "success");
-        openGamePage();
-    } else if (response.status == 400) {
-        setStatusMessage("Incorrect login information", "warning");
+        switch (await response.text()) {
+            case "Success":
+                setStatusMessage("Success! Going to the game page...", "success");
+                openGamePage();
+                break;
+            case "Failure":
+                setStatusMessage("Incorrect login information", "warning");
+                break;
+            case "NameNotFound":
+                setStatusMessage("Username not found", "warning");
+                break;
+        }
     } else {
         setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
     }
@@ -103,9 +114,14 @@ async function SendRegisterInfo() {
     }
     );
     if (response.ok) {
-        setStatusMessage("Successfully registered! Please log in.", "success");
-    } else if (response.status == 400) {
-        setStatusMessage("Register info not valid.", "warning");
+        switch (await response.text()) {
+            case "Success!":
+                setStatusMessage("Successfully registered! Please log in.", "success");
+                break;
+            case "NameAlreadyTaken":
+                setStatusMessage("Username is already taken.", "warning");
+                break;
+        }
     } else {
         setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
     }
@@ -123,9 +139,14 @@ async function CheckNameAvailability() {
     }
     );
     if (response.ok) {
-        setStatusMessage("Name is available!", "success");
-    } else if (response.status == 400) {
-        setStatusMessage("Name is not available.", "warning");
+        switch (await response.text()) {
+            case "NameIsAvailable":
+                setStatusMessage("Name is available!", "success");
+                break;
+            case "NameIsTaken":
+                setStatusMessage("Name is not available.", "warning");
+                break;
+        }
     } else {
         setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
     }

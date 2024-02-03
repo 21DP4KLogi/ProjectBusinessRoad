@@ -46,13 +46,13 @@ routes:
       resp Http400
     var userLoginAttempt = newUser()
     if dbConn.nameIsAvailable(sentUsername):  # Reject if username doesnt exist
-      resp Http400
+      resp "NameNotFound"
     dbConn.select(userLoginAttempt, "username = ?", sentUsername)
     let loginSuccessful = bcrypt.verify(sentPassword, userLoginAttempt.password)
     if loginSuccessful:
-      resp Http200
+      resp "Success"
     else:
-      resp Http400
+      resp "Failure"
 
   post "/register/submitinfo":
     let
@@ -64,19 +64,19 @@ routes:
     if sentPassword.len < 8:  # Reject if password too short
       resp Http400
     if not dbConn.nameIsAvailable(sentUsername):  # Reject if username already used
-      resp Http400
+      resp "NameAlreadyTaken"
     let
       generatedSalt = generateSalt(6)
       hashedPassword = $bcrypt(sentPassword, generatedSalt)  # Low password salt for testing purposes
     var newRegisteredUser = newUser(sentUsername, hashedPassword)
     dbConn.insert(newRegisteredUser)
-    resp Http200
+    resp "Success"
 
   post "/register/checkname":
     if dbConn.nameIsAvailable(request.body):
-      resp Http200
+      resp "NameIsAvailable"
     else:
-      resp Http400
+      resp "NameIsTaken"
 
   get "/motd":
     resp getRandMOTD()
