@@ -22,12 +22,6 @@ func newUser(un = "", pw = "", mn = startingMoney): User =
 func newBusiness(us = newUser(), fl = "", vl = 0): Business =
   Business(owner: us, field: fl, value: vl)
 
-# settings:
-#   staticDir = "dist"
-
-# proc readHtml(dirName: string): string =
-#   return readFile("dist/src/" & dirName & "/index.html")
-
 proc getRandMOTD(): string =
   return readFile("src/homepage_messages.txt").splitLines.sample()
 
@@ -39,51 +33,63 @@ dbConn.createTables(newUser())
 dbConn.createTables(newBusiness())
 
 routes:
+
   get "/":
     resp readFile("src/index.html")
+
   post "/login/submitinfo":
-    let loginInfo = parseJson(request.body)
-    let nameInput = loginInfo["username"].getStr
-    let passInput = loginInfo["password"].getStr
-    if nameInput == "" or passInput == "":  # Reject if either input is empty
+    let
+      requestBody = parseJson(request.body)
+      sentUsername = requestBody["username"].getStr
+      sentPassword = requestBody["password"].getStr
+    if sentUsername == "" or sentPassword == "":  # Reject if either input is empty
       resp Http400
     var userLoginAttempt = newUser()
-    if dbConn.nameIsAvailable(nameInput):  # Reject if username doesnt exist
+    if dbConn.nameIsAvailable(sentUsername):  # Reject if username doesnt exist
       resp Http400
-    dbConn.select(userLoginAttempt, "username = ?", nameInput)
-    let loginSuccessful = bcrypt.verify(passInput, userLoginAttempt.password)
+    dbConn.select(userLoginAttempt, "username = ?", sentUsername)
+    let loginSuccessful = bcrypt.verify(sentPassword, userLoginAttempt.password)
     if loginSuccessful:
       resp Http200
     else:
       resp Http400
+
   post "/register/submitinfo":
-    let registerInfo = parseJson(request.body)
-    if registerInfo["username"].getStr == "":  # Reject if username string is empty
+    let
+      requestBody = parseJson(request.body)
+      sentUsername = requestBody["username"].getStr
+      sentPassword = requestBody["password"].getStr
+    if sentUsername == "":  # Reject if username string is empty
       resp Http400
-    if registerInfo["password"].getStr.len < 8:  # Reject if password too short
+    if sentPassword.len < 8:  # Reject if password too short
       resp Http400
-    if not dbConn.nameIsAvailable(registerInfo["username"].getStr):  # Reject if username already used
+    if not dbConn.nameIsAvailable(sentUsername):  # Reject if username already used
       resp Http400
-    let hashedPassword = $bcrypt(registerInfo["password"].getStr, generateSalt(6))  # Low password salt for testing purposes
-    var newRegisteredUser = newUser(registerInfo["username"].getStr, hashedPassword)
+    let
+      generatedSalt = generateSalt(6)
+      hashedPassword = $bcrypt(sentPassword, generatedSalt)  # Low password salt for testing purposes
+    var newRegisteredUser = newUser(sentUsername, hashedPassword)
     dbConn.insert(newRegisteredUser)
     resp Http200
+
   post "/register/checkname":
     if dbConn.nameIsAvailable(request.body):
       resp Http200
     else:
       resp Http400
-  # get "/game":
-  #   resp readHtml("game")
+
   get "/motd":
     resp getRandMOTD()
+    
   post "/player/money":
-    let playerInfo = parseJson(request.body)
+    let
+      requestBody = parseJson(request.body)
+      sentUsername = requestBody["username"].getStr
     # Need code to verify that user token matches one of an authorized user, for now just lets through
-    if dbConn.nameIsAvailable(playerInfo["username"].getStr):
+    if dbConn.nameIsAvailable(sentUsername):
       resp Http400
     var playerQuery = newUser()
-    dbConn.select(playerQuery, "username = ?", playerInfo["username"].getStr)
+    dbConn.select(playerQuery, "username = ?", sentUsername)
     resp $playerQuery.money
 
 runForever()
