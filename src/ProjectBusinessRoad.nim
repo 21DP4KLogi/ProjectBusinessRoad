@@ -1,5 +1,5 @@
 import jester
-import std/[segfaults, strutils, random]
+import std/[segfaults, strutils, random, sysrand]
 import norm/[model, sqlite]
 import checksums/bcrypt
 import json
@@ -11,6 +11,7 @@ type
     username: string
     password: string
     money: int
+    authToken: string
   Business = ref object of Model
     owner: User
     field: string
@@ -28,6 +29,11 @@ proc getRandMOTD(): string =
 proc nameIsAvailable(database: DbConn, username: string): bool =
   return database.count(User, "*", dist = false, "username = ?", username) == 0
 
+proc generateAuthToken(): string =
+  let byteseq = urandom(32)
+  for entry in byteseq:
+    result.add(entry.toHex)
+
 let dbConn = open("PBRdata.db", "", "", "")
 dbConn.createTables(newUser())
 dbConn.createTables(newBusiness())
@@ -44,13 +50,15 @@ routes:
       sentPassword = requestBody["password"].getStr
     if sentUsername == "" or sentPassword == "":  # Reject if either input is empty
       resp Http400
-    var userLoginAttempt = newUser()
     if dbConn.nameIsAvailable(sentUsername):  # Reject if username doesnt exist
       resp "NameNotFound"
+    var userLoginAttempt = newUser()
     dbConn.select(userLoginAttempt, "username = ?", sentUsername)
     let loginSuccessful = bcrypt.verify(sentPassword, userLoginAttempt.password)
     if loginSuccessful:
-      resp "Success"
+      userLoginAttempt.authToken = generateAuthToken()
+      dbConn.update(userLoginAttempt)
+      resp $userLoginAttempt.authToken
     else:
       resp "Failure"
 
@@ -83,13 +91,12 @@ routes:
     
   post "/player/money":
     let
-      requestBody = parseJson(request.body)
-      sentUsername = requestBody["username"].getStr
-    # Need code to verify that user token matches one of an authorized user, for now just lets through
-    if dbConn.nameIsAvailable(sentUsername):
-      resp Http400
+      sentToken = request.body
+      # sentUsername = requestBody["username"].getStr
     var playerQuery = newUser()
-    dbConn.select(playerQuery, "username = ?", sentUsername)
+    if not dbConn.exists(User, "authToken = ?", sentToken):
+      resp Http404
+    dbConn.select(playerQuery, "authToken = ?", sentToken)
     resp $playerQuery.money
 
 runForever()

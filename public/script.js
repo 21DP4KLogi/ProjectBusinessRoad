@@ -77,17 +77,20 @@ async function SendLoginInfo() {
     }
     );
     if (response.ok) {
-        switch (await response.text()) {
-            case "Success":
-                setStatusMessage("Success! Going to the game page...", "success");
-                openGamePage();
-                break;
+        let responseText = await response.text()
+        switch (responseText) {
             case "Failure":
                 setStatusMessage("Incorrect login information", "warning");
                 break;
             case "NameNotFound":
                 setStatusMessage("Username not found", "warning");
                 break;
+            default:
+                global.authToken = responseText;
+                setStatusMessage("Success! Going to the game page...", "success");
+                openGamePage();
+                break;
+
         }
     } else {
         setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
@@ -164,4 +167,12 @@ async function openGamePage() {
 function openMainPage() {
     document.body.innerHTML = global.mainPage;
     getMOTD();
+}
+
+async function fetchMoney() {
+    let response = await fetch("/player/money", {
+        method: "POST",
+        body: global.authToken
+    });
+    return await response.text;
 }
