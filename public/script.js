@@ -65,6 +65,7 @@ function setStatusMessage(message, color) {
 async function SendLoginInfo() {
     const usernameField = document.getElementById("usernameInput");
     const passwordField = document.getElementById("passwordInput");
+    const saveCookieCheckbox = document.getElementById("SaveLoginCookieBox");
     if (usernameField.value == "" || passwordField.value == "") {
         setStatusMessage("Please input both the Username and Password", "warning")
     }
@@ -86,6 +87,9 @@ async function SendLoginInfo() {
                 setStatusMessage("Username not found", "warning");
                 break;
             default:
+                if (saveCookieCheckbox.checked == true) {
+                    Cookies.set("authToken", responseText, {expires: 7, sameSite: "strict", secure: true });
+                }
                 global.authToken = responseText;
                 setStatusMessage("Success! Going to the game page...", "success");
                 openGamePage();
@@ -164,7 +168,11 @@ async function openGamePage() {
     document.body.innerHTML = global.gamePage;
 }
 
-function openMainPage() {
+function logOut() {
+    fetch("/logout", {
+        method: "POST",
+        body: global.authToken
+    });
     document.body.innerHTML = global.mainPage;
     getMOTD();
 }

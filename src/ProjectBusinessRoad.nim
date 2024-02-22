@@ -17,8 +17,8 @@ type
     field: string
     value: int
 
-func newUser(un = "", pw = "", mn = startingMoney): User =
-  User(username: un, password: pw, money: mn)
+func newUser(un = "", pw = "", mn = startingMoney, at = ""): User =
+  User(username: un, password: pw, money: mn, authToken: at)
 
 func newBusiness(us = newUser(), fl = "", vl = 0): Business =
   Business(owner: us, field: fl, value: vl)
@@ -86,13 +86,24 @@ routes:
     else:
       resp "NameIsTaken"
 
+  post "/logout":
+    # Removes authtoken from account, requiring a new log in
+    let sentToken = request.body
+    if not dbConn.exists(User, "authToken = ?", sentToken):
+      resp Http404
+    var playerQuery = newUser()
+    dbConn.select(playerQuery, "authToken = ?", sentToken)
+    playerQuery.authToken = ""
+    dbConn.update(playerQuery)
+    resp Http200
+
   get "/motd":
     resp getRandMOTD()
     
   post "/player/money":
-    let
-      sentToken = request.body
-      # sentUsername = requestBody["username"].getStr
+    let sentToken = request.body
+    if sentToken == "":
+      resp Http400
     var playerQuery = newUser()
     if not dbConn.exists(User, "authToken = ?", sentToken):
       resp Http404
