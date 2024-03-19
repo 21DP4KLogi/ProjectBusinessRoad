@@ -1,6 +1,6 @@
 import jester
 import std/[segfaults, strutils, random, sysrand]
-import norm/[model, sqlite]
+import norm/[model, postgres]
 import checksums/bcrypt
 import json
 
@@ -27,14 +27,14 @@ proc getRandMOTD(): string =
   return readFile("src/homepage_messages.txt").splitLines.sample()
 
 proc nameIsAvailable(database: DbConn, username: string): bool =
-  return database.count(User, "*", dist = false, "username = ?", username) == 0
+  return database.count(User, "*", dist = false, "username = $1", username) == 0
 
 proc generateAuthToken(): string =
   let byteseq = urandom(32)
   for entry in byteseq:
     result.add(entry.toHex)
 
-let dbConn = open("PBRdata.db", "", "", "")
+let dbConn = open("localhost", "postgres", "postgres", "PBRdata")
 dbConn.createTables(newUser())
 dbConn.createTables(newBusiness())
 
@@ -53,7 +53,7 @@ routes:
     if dbConn.nameIsAvailable(sentUsername):  # Reject if username doesnt exist
       resp "NameNotFound"
     var userLoginAttempt = newUser()
-    dbConn.select(userLoginAttempt, "username = ?", sentUsername)
+    dbConn.select(userLoginAttempt, "username = $1", sentUsername)
     let loginSuccessful = bcrypt.verify(sentPassword, userLoginAttempt.password)
     if loginSuccessful:
       userLoginAttempt.authToken = generateAuthToken()
@@ -89,10 +89,10 @@ routes:
   post "/logout":
     # Removes authtoken from account, requiring a new log in
     let sentToken = request.body
-    if not dbConn.exists(User, "authToken = ?", sentToken):
+    if not dbConn.exists(User, "authToken = $1", sentToken):
       resp Http404
     var playerQuery = newUser()
-    dbConn.select(playerQuery, "authToken = ?", sentToken)
+    dbConn.select(playerQuery, "authToken = $1", sentToken)
     playerQuery.authToken = ""
     dbConn.update(playerQuery)
     resp Http200
@@ -105,9 +105,9 @@ routes:
     if sentToken == "":
       resp Http400
     var playerQuery = newUser()
-    if not dbConn.exists(User, "authToken = ?", sentToken):
+    if not dbConn.exists(User, "authToken = $1", sentToken):
       resp Http404
-    dbConn.select(playerQuery, "authToken = ?", sentToken)
+    dbConn.select(playerQuery, "authToken = $1", sentToken)
     resp $playerQuery.money
 
 runForever()
