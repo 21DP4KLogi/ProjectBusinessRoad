@@ -174,6 +174,7 @@ function logOut() {
         body: global.authToken
     });
     document.body.innerHTML = global.mainPage;
+    Cookies.remove("authToken", {expires: 7, sameSite: "strict", secure: true });
     getMOTD();
 }
 
