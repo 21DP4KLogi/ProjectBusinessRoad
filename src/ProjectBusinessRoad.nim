@@ -1,6 +1,6 @@
 import jester
 import std/[segfaults, strutils, random, sysrand, os]
-import norm/[model, postgres]
+import norm/[model, postgres, types]
 import checksums/bcrypt
 import json
 import zippy
@@ -11,7 +11,7 @@ const startingMoney: int = 10000
 type
   User = ref object of Model
     username: string
-    password: string
+    password: PaddedStringOfCap[60]
     money: int
     authToken: string
   Business = ref object of Model
@@ -19,7 +19,7 @@ type
     field: string
     value: int
 
-func newUser(un = "", pw = "", mn = startingMoney, at = ""): User =
+func newUser(un = "", pw = newPaddedStringOfCap[60](""), mn = startingMoney, at = ""): User =
   User(username: un, password: pw, money: mn, authToken: at)
 
 func newBusiness(us = newUser(), fl = "", vl = 0): Business =
@@ -62,7 +62,7 @@ routes:
       resp "NameNotFound"
     var userLoginAttempt = newUser()
     dbConn.select(userLoginAttempt, "username = $1", sentUsername)
-    let loginSuccessful = bcrypt.verify(sentPassword, userLoginAttempt.password)
+    let loginSuccessful = bcrypt.verify(sentPassword, $userLoginAttempt.password)
     if loginSuccessful:
       userLoginAttempt.authToken = generateAuthToken()
       dbConn.update(userLoginAttempt)
@@ -84,7 +84,7 @@ routes:
     let
       generatedSalt = generateSalt(6)
       hashedPassword = $bcrypt(sentPassword, generatedSalt)  # Low password salt for testing purposes
-    var newRegisteredUser = newUser(sentUsername, hashedPassword)
+    var newRegisteredUser = newUser(sentUsername, newPaddedStringOfCap[60](hashedPassword))
     dbConn.insert(newRegisteredUser)
     resp "Success"
 
