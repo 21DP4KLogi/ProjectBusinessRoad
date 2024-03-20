@@ -1,3 +1,4 @@
 projectBusinessRoad.exe
 ProjectBusinessRoad
 *.db
+.env

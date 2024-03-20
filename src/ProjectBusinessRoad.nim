@@ -1,9 +1,10 @@
 import jester
-import std/[segfaults, strutils, random, sysrand]
+import std/[segfaults, strutils, random, sysrand, os]
 import norm/[model, postgres]
 import checksums/bcrypt
 import json
 import zippy
+import dotenv
 
 const startingMoney: int = 10000
 
@@ -35,7 +36,13 @@ proc generateAuthToken(): string =
   for entry in byteseq:
     result.add(entry.toHex)
 
-let dbConn = open("localhost", "postgres", "postgres", "PBRdata")
+overload()  # Load dotenv file
+let dbhost = getEnv("DB_HOST")
+let dbuser = getEnv("DB_USER")
+let dbpass = getEnv("DB_PASS")
+let dbname = getEnv("DB_NAME")
+
+let dbConn = open(dbhost, dbuser, dbpass, dbname)
 dbConn.createTables(newUser())
 dbConn.createTables(newBusiness())
 
