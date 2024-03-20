@@ -124,7 +124,7 @@ async function SendRegisterInfo() {
     );
     if (response.ok) {
         switch (await response.text()) {
-            case "Success!":
+            case "Success":
                 setStatusMessage("Successfully registered! Please log in.", "success");
                 break;
             case "NameAlreadyTaken":
