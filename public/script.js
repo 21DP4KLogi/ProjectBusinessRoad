@@ -2,12 +2,13 @@ var global = {};
 
 // This approach might cause problems if the User's internet is too slow,
 // perhaps a loading screen could be useful.
+
 async function fetchInitialData() {
     global.mainPage = document.body.innerHTML; // Main page is saved in global upon loading so that a request is not required
     await getMOTD();
-    global.subtabRegister = await fetchComponent("/component/subtabRegister.html");
-    global.subtabLogin = await fetchComponent("/component/subtabLogin.html");
-    global.subtabDesc = await fetchComponent("/component/subtabDesc.html");
+    global.subtabRegister = $.get("/component/subtabRegister.html");
+    global.subtabLogin = $.get("/component/subtabLogin.html");
+    global.subtabDesc = $.get("/component/subtabDesc.html");
 }
 
 async function getMainPage() {
@@ -24,88 +25,82 @@ async function fetchComponent(route) {
 }
 
 function setOpenedSubtab(subtab) {
-    const bottomLeft = document.getElementById("bottomleft");
+    const bottomLeft = $("#bottomleft");
     switch (subtab) {
         case "login":
-            bottomLeft.innerHTML = global.subtabLogin;
+            $("#bottomleft").load("/component/subtabLogin.html");
             break;
         case "register":
-            bottomLeft.innerHTML = global.subtabRegister;
+            $("#bottomleft").load("/component/subtabRegister.html");
             break;
         case "desc":
-            bottomLeft.innerHTML = global.subtabDesc;
+            $("#bottomleft").load("/component/subtabDesc.html");
             break;
     }
 }
 
 async function getMOTD() {
-    if (global.motd == undefined) {
-        const response = await fetch("/motd");
-        global.motd = await response.text();
-    }
-    document.getElementById("motdQuote").innerHTML = global.motd;
+    $("#motdQuote").load("/motd")
 }
 
 function setStatusMessage(message, color) {
-    const statusText = document.getElementById("requestStatusText");
-    statusText.innerHTML = message;
+    $("#requestStatusText").text(message);
     switch (color) {
         case "default":
-            statusText.className = "defaultColor";
+            $("#requestStatusText").className = "defaultColor";
             break;
         case "warning":
-            statusText.className = "warningColor";
+            $("#requestStatusText").className = "warningColor";
             break;
         case "success":
-            statusText.className = "successColor";
+            $("#requestStatusText").className = "successColor";
             break;
     }
 }
 
 async function SendLoginInfo() {
-    const usernameField = document.getElementById("usernameInput");
-    const passwordField = document.getElementById("passwordInput");
-    const saveCookieCheckbox = document.getElementById("SaveLoginCookieBox");
-    if (usernameField.value == "" || passwordField.value == "") {
+    const usernameField = $("#usernameInput").val();
+    const passwordField = $("#passwordInput").val();
+    const saveCookieCheckbox = $("#SaveLoginCookieBox");
+    if (usernameField == "" || passwordField == "") {
         setStatusMessage("Please input both the Username and Password", "warning")
     }
-    let response = await fetch("/login/submitinfo", {
-        method: "POST",
-        body: JSON.stringify({
-            username: usernameField.value,
-            password: passwordField.value
-        })
-    }
-    );
-    if (response.ok) {
-        let responseText = await response.text()
-        switch (responseText) {
-            case "Failure":
-                setStatusMessage("Incorrect login information", "warning");
-                break;
-            case "NameNotFound":
-                setStatusMessage("Username not found", "warning");
-                break;
-            default:
-                if (saveCookieCheckbox.checked == true) {
-                    Cookies.set("authToken", responseText, {expires: 7, sameSite: "strict", secure: true });
+    $.post(
+        "/login/submitinfo",
+        JSON.stringify({
+            username: usernameField,
+            password: passwordField
+        }),
+        function(response, status){
+            if (status.ok) {
+                console.log(response);
+                switch (response) {
+                    case "Failure":
+                        setStatusMessage("Incorrect login information", "warning");
+                        break;
+                    case "NameNotFound":
+                        setStatusMessage("Username not found", "warning");
+                        break;
+                    default:
+                        if (saveCookieCheckbox.checked == true) {
+                            Cookies.set("authToken", response, {expires: 7, sameSite: "strict", secure: true });
+                        }
+                        global.authToken = response;
+                        setStatusMessage("Success! Going to the game page...", "success");
+                        openGamePage();
+                        break;
                 }
-                global.authToken = responseText;
-                setStatusMessage("Success! Going to the game page...", "success");
-                openGamePage();
-                break;
-
+            } else {
+                setStatusMessage(String("HTTP error, status code: " + String(response.status)), "warning");
+            }
         }
-    } else {
-        setStatusMessage(str("HTTP error, status code: " + str(response.status)), "warning");
-    }
-
+    )
 }
 
 async function SendRegisterInfo() {
-    const usernameField = document.getElementById("usernameInput");
-    const passwordField = document.getElementById("passwordInput");
-    const confirmPasswordField = document.getElementById("confirmPassInput");
+    const usernameField = $("#usernameInput");
+    const passwordField = $("#passwordInput");
+    const confirmPasswordField = $("#confirmPassInput");
     if (passwordField.value.length < 8) {
         setStatusMessage("Your password needs to be atleast 8 characters long.", "warning");
         return;
@@ -137,7 +132,7 @@ async function SendRegisterInfo() {
 }
 
 async function CheckNameAvailability() {
-    const usernameField = document.getElementById("usernameInput");
+    const usernameField = $("#usernameInput");
     if (usernameField.value == "") {
         setStatusMessage("Input a name to check it's availability", "default");
         return;
