@@ -3,6 +3,7 @@ import std/[segfaults, strutils, random, sysrand]
 import norm/[model, postgres]
 import checksums/bcrypt
 import json
+import zippy
 
 const startingMoney: int = 10000
 
@@ -109,5 +110,9 @@ routes:
       resp Http404
     dbConn.select(playerQuery, "authToken = $1", sentToken)
     resp $playerQuery.money
+  
+  get "/jquery.js":
+    setHeader(responseHeaders, "Content-Encoding", "g-zip")
+    resp compress(readfile("public/jquery-3.7.1.min.js"), BestSpeed, dfGzip)
 
 runForever()
