@@ -47,13 +47,13 @@ function setStatusMessage(message, color) {
     $("#requestStatusText").text(message);
     switch (color) {
         case "default":
-            $("#requestStatusText").className = "defaultColor";
+            $("#requestStatusText").attr("class", "defaultColor");
             break;
         case "warning":
-            $("#requestStatusText").className = "warningColor";
+            $("#requestStatusText").attr("class", "warningColor");
             break;
         case "success":
-            $("#requestStatusText").className = "successColor";
+            $("#requestStatusText").attr("class", "successColor");
             break;
     }
 }
@@ -61,9 +61,10 @@ function setStatusMessage(message, color) {
 async function SendLoginInfo() {
     const usernameField = $("#usernameInput").val();
     const passwordField = $("#passwordInput").val();
-    const saveCookieCheckbox = $("#SaveLoginCookieBox");
+    const saveCookieCheckboxChecked = $("#SaveLoginCookieBox").is(":checked");
     if (usernameField == "" || passwordField == "") {
         setStatusMessage("Please input both the Username and Password", "warning")
+        return;
     }
     $.post(
         "/login/submitinfo",
@@ -72,8 +73,7 @@ async function SendLoginInfo() {
             password: passwordField
         }),
         function(response, status){
-            if (status.ok) {
-                console.log(response);
+            if (status == "success") {
                 switch (response) {
                     case "Failure":
                         setStatusMessage("Incorrect login information", "warning");
@@ -82,7 +82,7 @@ async function SendLoginInfo() {
                         setStatusMessage("Username not found", "warning");
                         break;
                     default:
-                        if (saveCookieCheckbox.checked == true) {
+                        if (saveCookieCheckboxChecked) {
                             Cookies.set("authToken", response, {expires: 7, sameSite: "strict", secure: true });
                         }
                         global.authToken = response;
@@ -91,7 +91,7 @@ async function SendLoginInfo() {
                         break;
                 }
             } else {
-                setStatusMessage(String("HTTP error, status code: " + String(response.status)), "warning");
+                setStatusMessage(String("HTTP error, status code: " + String(status)), "warning");
             }
         }
     )
