@@ -70,7 +70,7 @@ async function SendLoginInfo() {
     return;
   }
   $.post(
-    "/login/submitinfo",
+    "/auth/login/submitinfo",
     JSON.stringify({
       username: username,
       password: password,
@@ -123,7 +123,7 @@ async function SendRegisterInfo() {
     return;
   }
   $.post(
-    "/register/submitinfo",
+    "/auth/register/submitinfo",
     JSON.stringify({
       username: username,
       password: password,
@@ -154,7 +154,7 @@ async function CheckNameAvailability() {
     setStatusMessage("Input a name to check it's availability", "default");
     return;
   }
-  $.post("/register/checkname", username, (response, status) => {
+  $.post("/auth/register/checkname", username, (response, status) => {
     if (status == "success") {
       switch (response) {
         case "NameIsAvailable":
@@ -185,12 +185,6 @@ async function logOut() {
   });
 }
 
-async function fetchMoney() {
-  $.post("/player/money", global.authToken, (response, status) => {
-    if (status == "success") {
-      return response;
-    } else {
-      return "Error";
-    }
-  });
+async function getMoney() {
+  $("#moneyCount").load("/player/money", global.authToken);
 }
