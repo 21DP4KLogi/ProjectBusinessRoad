@@ -11,6 +11,8 @@ bin           = @["ProjectBusinessRoad"]
 # Dependencies
 
 requires "nim >= 2.0.0"
+# Httpbeast is a dependency of jester, but I am specifying version here as older versions give me a memory leak
+requires "httpbeast >= 0.4.2"
 requires "jester"
 requires "norm"
 requires "checksums"

@@ -12,8 +12,9 @@ async function fetchInitialData() {
 }
 
 async function getMainPage() {
-  await $(document.body).load("/component/mainPage.html");
-  await $("#motdQuote").load("/motd");
+  await $(document.body).load("/component/mainPage.html", () => {
+    $("#motdQuote").load("/motd");
+  });
 }
 
 async function fetchComponent(route) {
