@@ -6,7 +6,7 @@ proc getRandMOTD*(): string =
   return readFile("src/homepage_messages.txt").splitLines.sample()
 
 proc nameIsAvailable*(database: DbConn, username: string): bool =
-  return database.count(User, "*", dist = false, "username = $1", username) == 0
+  return not database.exists(User, "username = $1", username)
 
 proc generateAuthToken*(): string =
   let byteseq = urandom(32)
