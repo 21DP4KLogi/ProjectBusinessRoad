@@ -13,7 +13,7 @@ async function fetchInitialData() {
 
 async function getMainPage() {
   await $(document.body).load("/component/mainPage.html", () => {
-    $("#motdQuote").load("/motd");
+    $("#motdQuote").load("/page/motd");
   });
 }
 
@@ -43,7 +43,7 @@ function setOpenedSubtab(subtab) {
 }
 
 async function getMOTD() {
-  $("#motdQuote").load("/motd");
+  $("#motdQuote").load("/page/motd");
 }
 
 function setStatusMessage(message, color) {
@@ -175,7 +175,7 @@ async function openGamePage() {
 }
 
 async function logOut() {
-  $.post("/logout", global.authToken, () => {
+  $.post("/auth/logout", global.authToken, () => {
     getMainPage(),
       Cookies.remove("authToken", {
         expires: 7,
@@ -186,5 +186,5 @@ async function logOut() {
 }
 
 async function getMoney() {
-  $("#moneyCount").load("/player/money", global.authToken);
+  $("#moneyCount").load("/game/player/money", global.authToken);
 }
