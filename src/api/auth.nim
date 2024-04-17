@@ -4,7 +4,7 @@ import norm/[model, postgres, types]
 import "../models.nim"
 
 proc accountExists*(database: DbConn, code: string): bool =
-  if code.len > 8: return false
+  if code.len != 8: return false
   return database.exists(User, "code = $1", code)
 
 # proc generateAuthToken*(): string =

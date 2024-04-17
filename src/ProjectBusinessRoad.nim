@@ -1,7 +1,6 @@
 import jester
 import std/[segfaults, strutils, os]
 import norm/[postgres, types]
-import json
 import zippy
 import dotenv
 
