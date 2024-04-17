@@ -7,7 +7,6 @@ import zippy
 import dotenv
 
 import "models.nim"
-import "utils.nim"
 
 import "api/auth.nim"
 import "api/page.nim"
@@ -21,7 +20,7 @@ let dbname = getEnv("DB_NAME")
 
 let dbConn = open(dbhost, dbuser, dbpass, dbname)
 dbConn.createTables(newUser())
-dbConn.createTables(newBusiness())
+# dbConn.createTables(newBusiness())
 
 routes:
 

@@ -1,6 +1,5 @@
 import jester
 import norm/[postgres]
-import "../utils.nim"
 import "../models.nim"
 
 router game:

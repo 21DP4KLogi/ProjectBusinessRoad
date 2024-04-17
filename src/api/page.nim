@@ -1,6 +1,9 @@
 import jester
+import std/[random, strutils]
 import zippy
-import "../utils.nim"
+
+proc getRandMOTD*(): string =
+  return readFile("src/homepage_messages.txt").splitLines.sample()
 
 router page:
 

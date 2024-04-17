@@ -1,10 +1,17 @@
 import jester
-import std/[segfaults, strutils]
+import std/[segfaults, strutils, sysrand]
 import norm/[model, postgres, types]
 import checksums/bcrypt
 import json
 import "../models.nim"
-import "../utils.nim"
+
+proc nameIsAvailable*(database: DbConn, username: string): bool =
+  return not database.exists(User, "username = $1", username)
+
+proc generateAuthToken*(): string =
+  let byteseq = urandom(32)
+  for entry in byteseq:
+    result.add(entry.toHex)
 
 router auth:
 
