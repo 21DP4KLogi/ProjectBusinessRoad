@@ -1,7 +1,6 @@
 import jester
 import std/[segfaults, strutils, os]
-import norm/[model, postgres, types]
-import checksums/bcrypt
+import norm/[postgres, types]
 import json
 import zippy
 import dotenv

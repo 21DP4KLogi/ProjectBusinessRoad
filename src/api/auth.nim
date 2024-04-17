@@ -1,74 +1,37 @@
 import jester
-import std/[segfaults, strutils, sysrand]
+import std/[segfaults, strutils, sysrand, base64]
 import norm/[model, postgres, types]
-import checksums/bcrypt
-import json
 import "../models.nim"
 
-proc nameIsAvailable*(database: DbConn, username: string): bool =
-  return not database.exists(User, "username = $1", username)
+proc accountExists*(database: DbConn, code: string): bool =
+  if code.len > 8: return false
+  return database.exists(User, "code = $1", code)
 
-proc generateAuthToken*(): string =
-  let byteseq = urandom(32)
-  for entry in byteseq:
-    result.add(entry.toHex)
+# proc generateAuthToken*(): string =
+#   let byteseq = urandom(32)
+#   for entry in byteseq:
+#     result.add(entry.toHex)
+
+proc generateAccount*(): string =
+  result = urandom(6).encode 
 
 router auth:
 
-  post "/login/submitinfo":
-    let
-      requestBody = parseJson(request.body)
-      sentUsername = requestBody["username"].getStr
-      sentPassword = requestBody["password"].getStr
-    if sentUsername == "" or sentPassword == "":  # Reject if either input is empty
-      resp Http400
+  get "/login/@code":
     withDb:
-      if db.nameIsAvailable(sentUsername):  # Reject if username doesnt exist
-        resp "NameNotFound"
-      var userLoginAttempt = newUser()
-      db.select(userLoginAttempt, "username = $1", sentUsername)
-      let loginSuccessful = bcrypt.verify(sentPassword, $userLoginAttempt.password)
-      if loginSuccessful:
-        userLoginAttempt.authToken = generateAuthToken()
-        db.update(userLoginAttempt)
-        resp $userLoginAttempt.authToken
+      if @"code".len == 8 and db.accountExists(@"code"):
+        setCookie("code", @"code", secure = true, httpOnly = true, sameSite = Strict)
+        resp Http200
       else:
-        resp "Failure"
+        resp Http400
 
-  post "/register/submitinfo":
-    let
-      requestBody = parseJson(request.body)
-      sentUsername = requestBody["username"].getStr
-      sentPassword = requestBody["password"].getStr
-    if sentUsername == "":  # Reject if username string is empty
-      resp Http400
-    if sentPassword.len < 8:  # Reject if password too short
-      resp Http400
+  get "/register":
+    let newAccountCode = generateAccount()
+    var userQuery = newUser(cd = newPaddedStringOfCap[8](newAccountCode))
     withDb:
-      if not db.nameIsAvailable(sentUsername):  # Reject if username already used
-        resp "NameAlreadyTaken"
-      let
-        generatedSalt = generateSalt(6)
-        hashedPassword = $bcrypt(sentPassword, generatedSalt)  # Low password salt for testing purposes
-      var newRegisteredUser = newUser(sentUsername, newPaddedStringOfCap[60](hashedPassword))
-      db.insert(newRegisteredUser)
-      resp "Success"
+      db.insert(userQuery)
+    resp newAccountCode
 
-  post "/register/checkname":
-    withDb:
-      if db.nameIsAvailable(request.body):
-        resp "NameIsAvailable"
-      else:
-        resp "NameIsTaken"
-
-  post "/logout":
-    # Removes authtoken from account, requiring a new log in
-    withDB:
-      let sentToken = request.body
-      if not db.exists(User, "authToken = $1", sentToken):
-        resp Http404
-      var playerQuery = newUser()
-      db.select(playerQuery, "authToken = $1", sentToken)
-      playerQuery.authToken = ""
-      db.update(playerQuery)
+  get "/logout":
+    setCookie("code", "", secure = true, httpOnly = true, sameSite = Strict, expires = daysForward(-1))
     resp Http200
