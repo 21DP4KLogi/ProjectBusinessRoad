@@ -8,16 +8,6 @@ async function getMainPage() {
   });
 }
 
-async function fetchComponent(route) {
-  $.get(route, (response, status) => {
-    if (status == "success") {
-      return response;
-    } else {
-      return "Error, status: " + status;
-    }
-  });
-}
-
 function setOpenedSubtab(subtab) {
   const bottomLeft = $("#bottomleft");
   switch (subtab) {
@@ -35,18 +25,9 @@ async function getMOTD() {
 }
 
 function setStatusMessage(message, color) {
-  $("#requestStatusText").text(message);
-  switch (color) {
-    case "default":
-      $("#requestStatusText").attr("class", "defaultColor");
-      break;
-    case "warning":
-      $("#requestStatusText").attr("class", "warningColor");
-      break;
-    case "success":
-      $("#requestStatusText").attr("class", "successColor");
-      break;
-  }
+  $("#requestStatusText")
+    .text(message)
+    .attr("class", color + "Color");
 }
 
 async function LogIn() {
@@ -56,7 +37,7 @@ async function LogIn() {
     setStatusMessage("An account code is 8 characters long.", "warning");
     return;
   }
-  $.get("/auth/login", {code: inputtedCode, remember: rememberMeBoxChecked})
+  $.get("/auth/login", { code: inputtedCode, remember: rememberMeBoxChecked })
     .done(() => {
       openGamePage();
     })
@@ -68,7 +49,7 @@ async function LogIn() {
 async function RegisterAccount() {
   $("#registration > button")
     .text("Requesting new account...")
-    .attr("disabled", "true");
+    .attr("disabled");
   $.get("/auth/register", (data) => {
     $("#registration > h1").text(data);
   })
@@ -77,7 +58,7 @@ async function RegisterAccount() {
     })
     .fail(() => {
       setStatusMessage("An unknown error has occured.");
-      $("#registration > button").text("Try again").attr("disabled", "");
+      $("#registration > button").text("Try again").removeAttr("disabled");
     });
 }
 
@@ -93,8 +74,4 @@ async function logOut() {
         "Failed to request a logout, you may have to delete the cookie from the browser manually.",
       );
     });
-}
-
-async function getMoney() {
-  $("#moneyCount").load("/game/player/money", global.authToken);
 }
