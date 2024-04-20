@@ -50,7 +50,7 @@ function setStatusMessage(message, color) {
 }
 
 async function LogIn() {
-  const inputtedCode = $("#loggingIn > input").val();
+  const inputtedCode = $("#codeInput").val();
   const rememberMeBoxChecked = $("#SaveLoginCookieBox").is(":checked");
   if (inputtedCode.length != 8) {
     setStatusMessage("An account code is 8 characters long.", "warning");
