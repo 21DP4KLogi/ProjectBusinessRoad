@@ -1,4 +1,4 @@
-import norm/[model, types]
+import norm/[model, types, postgres]
 
 const startingMoney: int = 10000
 
@@ -16,3 +16,7 @@ func newUser*(cd = newPaddedStringOfCap[8](""), mn = startingMoney): User =
 
 # func newBusiness*(us = newUser(), fl = "", vl = 0): Business =
   # Business(owner: us, field: fl, value: vl)
+
+proc accountExists*(database: DbConn, code: string): bool =
+  if code.len != 8: return false
+  return database.exists(User, "code = $1", code)
