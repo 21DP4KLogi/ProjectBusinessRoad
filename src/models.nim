@@ -17,6 +17,9 @@ func newUser*(cd = newPaddedStringOfCap[8](""), mn = startingMoney): User =
 # func newBusiness*(us = newUser(), fl = "", vl = 0): Business =
   # Business(owner: us, field: fl, value: vl)
 
-proc accountExists*(database: DbConn, code: string): bool =
+# I don't know if opening and closing the DB connection for
+# that one line has any meaningful impact on performance.
+proc accountExists*(code: string): bool =
   if code.len != 8: return false
-  return database.exists(User, "code = $1", code)
+  withDb:
+    return db.exists(User, "code = $1", code)

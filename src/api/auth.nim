@@ -16,15 +16,14 @@ router auth:
   get "/login":
     let code = request.params["code"]
     let remember = request.params["remember"].parseBool
-    withDb:
-      if code.len == 8 and db.accountExists(code):
-        if remember:
-          setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/", expires = daysForward(7))
-        else:
-          setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/")
-        resp Http200
+    if accountExists(code):
+      if remember:
+        setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/", expires = daysForward(7))
       else:
-        resp Http400
+        setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/")
+      resp Http200
+    else:
+      resp Http400
 
   get "/register":
     let newAccountCode = generateAccount()
