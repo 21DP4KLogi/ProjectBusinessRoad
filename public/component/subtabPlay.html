@@ -1,18 +1,31 @@
-<h2>Authenticate to Business Road</h2>
-<h3>Login</h3>
-<div id="loggingIn">
-  <input type="password" id="codeInput" maxlength="8" />
-  <button onclick="LogIn()">Log in</button>
-  <input type="checkbox" name="saveLoginCookieBox" id="SaveLoginCookieBox" />
-  <label for="saveLoginCookieBox"
-    >Remember me</label
-  >
-  <p id="requestStatusText"></p>
-</div>
+<div id="authPage">
+  <h2>Authenticate to Business Road</h2>
+  <div id="inputs">
+    <div id="login">
+      <h3>Login</h3>
+      <input type="password" id="codeInput" maxlength="8" placeholder="********" /> <br />
+      <input
+        type="checkbox"
+        name="saveLoginCookieBox"
+        id="SaveLoginCookieBox"
+      />
+      <label for="saveLoginCookieBox">Remember me</label>
+      <button onclick="LogIn()" class="infosubmitbutton">Log in</button>
+      <p id="requestStatusText"></p>
+    </div>
 
-<h3>Register</h3>
-<div id="registration">
-  <h1>________</h1>
-  <br />
-  <button onclick="RegisterAccount()">Register a new account</button>
+    <div id="register">
+      <h3>Register</h3>
+      <div id="registration">
+        <h1>........</h1>
+        <button onclick="RegisterAccount()", class="infosubmitbutton">Register a new account</button>
+      </div>
+    </div>
+  </div>
+  <div id="info">
+    <p>
+      This part of the page contains information about authentication and the
+      pesky legal stuff.
+    </p>
+  </div>
 </div>
