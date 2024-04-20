@@ -78,3 +78,18 @@ body {
 .successColor {
 	color: forestgreen;
 }
+
+#registration {
+  display: flex;
+  flex-direction: column;
+  scale: 2;
+  align-items: center;
+  justify-content: space-around;
+  h1 {
+    font-family: monospace;
+  }
+} 
+
+#codeInput {
+  width: 8ch;
+}
