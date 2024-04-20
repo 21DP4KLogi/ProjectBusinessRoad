@@ -13,14 +13,19 @@ proc accountExists*(database: DbConn, code: string): bool =
 #     result.add(entry.toHex)
 
 proc generateAccount*(): string =
-  result = urandom(6).encode 
+  result = urandom(6).encode(safe = true)
 
 router auth:
 
-  get "/login/@code":
+  get "/login":
+    let code = request.params["code"]
+    let remember = request.params["remember"].parseBool
     withDb:
-      if @"code".len == 8 and db.accountExists(@"code"):
-        setCookie("code", @"code", secure = true, httpOnly = true, sameSite = Strict)
+      if code.len == 8 and db.accountExists(code):
+        if remember:
+          setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/", expires = daysForward(7))
+        else:
+          setCookie("code", code, secure = true, httpOnly = true, sameSite = Strict, path="/")
         resp Http200
       else:
         resp Http400
@@ -33,5 +38,5 @@ router auth:
     resp newAccountCode
 
   get "/logout":
-    setCookie("code", "", secure = true, httpOnly = true, sameSite = Strict, expires = daysForward(-1))
+    setCookie("code", "", secure = true, httpOnly = true, sameSite = Strict, expires = daysForward(-1), path = "/")
     resp Http200
