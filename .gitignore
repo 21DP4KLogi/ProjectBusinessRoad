@@ -1,4 +1,6 @@
 projectBusinessRoad.exe
 ProjectBusinessRoad
+pbrGameLogicComputer
+pbrWebServer
 *.db
 .env

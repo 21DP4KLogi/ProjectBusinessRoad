@@ -5,7 +5,7 @@ author        = "21DP4KLogi"
 description   = "A new awesome nimble package"
 license       = "AGPL-3.0-or-later"
 srcDir        = "src"
-bin           = @["ProjectBusinessRoad"]
+bin           = @["pbrWebServer", "pbrGameLogicComputer"]
 
 
 # Dependencies
