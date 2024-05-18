@@ -27,7 +27,8 @@ while true:
     stdout.write("Latest tick: " & $lastTick)
     stdout.flushFile()
     
-    if dbConn.count(User) == 0:
+    let userCount = dbConn.count(User)
+    if userCount == 0:
       continue
 
     var allUsers = @[newUser()]
@@ -35,3 +36,11 @@ while true:
     for user in allUsers:
       user.money = currentTime.toInt
     dbConn.update(allUsers)
+    
+
+    let employeeCount = dbConn.count(Employee)
+    
+    if employeeCount < userCount * 2:
+      for i in (employeeCount + 1)..(userCount * 2):
+        var employeeQuery = newEmployee()
+        dbConn.insert(employeeQuery)

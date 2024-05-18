@@ -27,7 +27,8 @@ router auth:
 
   get "/register":
     let newAccountCode = generateAccount()
-    var userQuery = newUser(cd = newPaddedStringOfCap[8](newAccountCode))
+    var userQuery = newUser()
+    userQuery.code = newPaddedStringOfCap[8](newAccountCode) 
     withDb:
       db.insert(userQuery)
     resp newAccountCode

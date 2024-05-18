@@ -1,4 +1,5 @@
 import norm/[model, types, postgres]
+import std/options
 
 const startingMoney: int = 10000
 
@@ -6,16 +7,30 @@ type
   User* = ref object of Model
     code*: PaddedStringOfCap[8]
     money*: int
-  # Business* = ref object of Model
-  #   owner*: User
-  #   field*: string
-  #   value*: int
+  Business* = ref object of Model
+    owner*: Option[User]
+  Employee* = ref object of Model
+    name*: StringOfCap[32]
+    workplace*: Option[Business]
+    proficiency*: string
 
-func newUser*(cd = newPaddedStringOfCap[8](""), mn = startingMoney): User =
-  User(code: cd, money: mn)
+func newUser*(): User =
+  User(
+    code: newPaddedStringOfCap[8](""),
+    money: startingMoney,
+  )
 
-# func newBusiness*(us = newUser(), fl = "", vl = 0): Business =
-  # Business(owner: us, field: fl, value: vl)
+func newBusiness*(owner: Option[User] = none User): Business =
+  Business(
+    owner: owner,
+  )
+
+func newEmployee*(workplace: Option[Business] = none Business): Employee =
+  Employee(
+    name: newStringOfCap[32]("John Employee"),
+    workplace: workplace,
+    proficiency: "taxpaying",
+  )
 
 # I don't know if opening and closing the DB connection for
 # that one line has any meaningful impact on performance.

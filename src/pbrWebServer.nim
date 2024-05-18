@@ -18,7 +18,8 @@ let dbname = getEnv("DB_NAME")
 
 let dbConn = open(dbhost, dbuser, dbpass, dbname)
 dbConn.createTables(newUser())
-# dbConn.createTables(newBusiness())
+dbConn.createTables(newBusiness())
+dbConn.createTables(newEmployee())
 
 routes:
 

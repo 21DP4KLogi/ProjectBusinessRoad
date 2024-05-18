@@ -6,8 +6,6 @@ router game:
 
   get "/money":
     let code = request.cookies["code"]
-    if code.len != 8:
-      resp Http400
     if not accountExists(code):
       resp Http400
     var userQuery = newUser()
