@@ -2,13 +2,17 @@ import jester
 import std/[random, strutils]
 import zippy
 
-proc getRandMOTD*(): string =
-  return readFile("src/homepage_messages.txt").splitLines.sample()
+const MOTDs* = [
+  "A donation a day keeps the tax audit away!",
+  "moneymoneymoneymoneymoneymoneymoneymoneymoneymoney",
+  "Finest business simulator since UNDEFINED!",
+  "Generic but somewhat exciting description!",
+]
 
 router page:
 
   get "/motd":
-    resp getRandMOTD()
+    resp MOTDs.sample()
 
   get "/jquery.js":
     setHeader(responseHeaders, "Content-Encoding", "gzip")
