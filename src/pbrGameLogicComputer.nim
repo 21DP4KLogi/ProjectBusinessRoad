@@ -1,5 +1,5 @@
-import std/[times, os, strutils, terminal, math]
-import norm/[postgres, types]
+import std/[times, os, strutils, terminal, random]
+import norm/[postgres]
 import dotenv
 
 import "models.nim"
@@ -21,26 +21,29 @@ echo "Project Business Road - Game logic computer"
 while true:
 
   currentTime = epochTime()
-  if currentTime == lastTick + tickInterval:
-    lastTick = currentTime
-    stdout.eraseLine()
-    stdout.write("Latest tick: " & $lastTick)
-    stdout.flushFile()
-    
-    let userCount = dbConn.count(User)
-    if userCount == 0:
-      continue
+  if currentTime < lastTick + tickInterval:
+    continue
 
-    var allUsers = @[newUser()]
-    dbConn.selectAll(allUsers)
-    for user in allUsers:
-      user.money = currentTime.toInt
-    dbConn.update(allUsers)
-    
+  lastTick = currentTime
+  stdout.eraseLine()
+  stdout.write("Latest tick: " & $lastTick)
+  stdout.flushFile()
+  
+  let userCount = dbConn.count(User)
+  if userCount == 0:
+    continue
 
-    let employeeCount = dbConn.count(Employee)
-    
-    if employeeCount < userCount * 2:
-      for i in (employeeCount + 1)..(userCount * 2):
-        var employeeQuery = newEmployee()
-        dbConn.insert(employeeQuery)
+  var allUsers = @[newUser()]
+  dbConn.selectAll(allUsers)
+  for user in allUsers:
+    user.money = currentTime.toInt
+  dbConn.update(allUsers)
+  
+
+  let employeeCount = dbConn.count(Employee)
+  
+  if employeeCount < userCount * 2:
+    for i in (employeeCount + 1)..(userCount * 2):
+      var employeeQuery = newEmployee()
+      employeeQuery.proficiency = EmployeeProficiencies.sample()
+      dbConn.insert(employeeQuery)
