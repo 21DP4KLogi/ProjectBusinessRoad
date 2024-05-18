@@ -2,6 +2,13 @@ $(document).ready(() => {
   getMOTD();
 });
 
+function getCurrentMoney() {
+  $.get("/game/money", (data) => {
+    $("#moneyCounter").text("$" + data);
+  });
+}
+var moneyInterval;
+
 async function getMainPage() {
   await $(document.body).load("/component/mainPage.html", () => {
     $("#motdQuote").load("/page/motd");
@@ -49,7 +56,7 @@ async function LogIn() {
 async function RegisterAccount() {
   $("#registration > button")
     .text("Requesting new account...")
-    .attr("disabled");
+    .attr("disabled", true);
   $.get("/auth/register", (data) => {
     $("#registration > h1").text(data);
   })
@@ -64,9 +71,12 @@ async function RegisterAccount() {
 
 async function openGamePage() {
   $(document.body).load("/component/gamePage.html");
+  getCurrentMoney();
+  moneyInterval = setInterval(getCurrentMoney, 1000);
 }
 
 async function logOut() {
+  clearInterval(moneyInterval);
   $.get("/auth/logout")
     .done(() => getMainPage())
     .fail(() => {
