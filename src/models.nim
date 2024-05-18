@@ -9,6 +9,8 @@ type
     money*: int
   Business* = ref object of Model
     owner*: Option[User]
+    field*: string
+    value*: int
   Employee* = ref object of Model
     name*: StringOfCap[32]
     workplace*: Option[Business]
@@ -23,14 +25,27 @@ func newUser*(): User =
 func newBusiness*(owner: Option[User] = none User): Business =
   Business(
     owner: owner,
+    field: "",
+    value: 0,
   )
 
 func newEmployee*(workplace: Option[Business] = none Business): Employee =
   Employee(
     name: newStringOfCap[32]("John Employee"),
     workplace: workplace,
-    proficiency: "taxpaying",
+    proficiency: "",
   )
+
+const BusinessFields* = [
+  "programming",
+  "baking",
+]
+
+const EmployeeProficiencies* = [
+  "taxpayer",
+  "usesarchbtw",
+  "hungry",
+]
 
 # I don't know if opening and closing the DB connection for
 # that one line has any meaningful impact on performance.
