@@ -1,5 +1,6 @@
 import norm/[model, types, postgres]
 import std/options
+import json
 
 const startingMoney: int = 10000
 
@@ -53,3 +54,6 @@ proc accountExists*(code: string): bool =
   if code.len != 8: return false
   withDb:
     return db.exists(User, "code = $1", code)
+
+proc `%`*(psoc: PaddedStringOfCap): JsonNode =
+  result = %($psoc)
