@@ -22,6 +22,9 @@ while true:
 
   currentTime = epochTime()
   if currentTime < lastTick + tickInterval:
+    # Sleep timer added to prevent using 100% of thread during downtime, of which there is a lot
+    # Side effect is that the intervals are no longer exactly 1 second, but about 1.001 seconds
+    sleep((((lastTick + tickInterval) - currentTime) * 1000).toInt)
     continue
 
   lastTick = currentTime
