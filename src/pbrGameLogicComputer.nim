@@ -39,7 +39,22 @@ while true:
   var allUsers = @[newUser()]
   dbConn.selectAll(allUsers)
   for user in allUsers:
-    user.money = currentTime.toInt
+    if not dbConn.exists(Business, "owner = $1", user.id):
+      continue
+    var businessQuery = @[newBusiness()]
+    dbConn.select(businessQuery, "owner = $1", user.id)
+
+    for business in businessQuery:
+      var employeeQuery = @[newEmployee()]
+
+      if not dbConn.exists(Employee, "workplace = $1", business.id):
+        continue
+      dbConn.select(employeeQuery, "workplace = $1", business.id)
+
+      for employee in employeeQuery:
+        # BUG: Since money is an Int, a tickrate that is too high might round it to zero
+        user.money += (5 * tickInterval).toInt
+
   dbConn.update(allUsers)
   
 
