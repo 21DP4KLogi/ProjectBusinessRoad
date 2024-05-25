@@ -1,7 +1,7 @@
 import jester
 import norm/[postgres]
 import "../models.nim"
-import std/json
+import std/[json, strutils]
 
 router business:
 
@@ -38,3 +38,47 @@ router business:
       #   businessIdList.add($business.id)
       # How the hell do i just send an array?
     resp(%* businessQuery)
+
+  get "/findemployees/@businessID":
+    let code = request.cookies["code"]
+    if not accountExists(code):
+      resp Http400
+    withDb:
+
+      var userQuery = newUser()
+      db.select(userQuery, "code = $1", code)
+
+      var businessQuery = newBusiness()
+      if not db.exists(Business, "id = $1 AND owner = $2", @"businessID".parseInt(), userQuery.id):
+        resp Http400
+      db.select(businessQuery, "id = $1 AND owner = $2", @"businessID".parseInt(), userQuery.id)
+
+      var employeeQuery = @[newEmployee()]
+      if not db.exists(Employee, "workplace IS NULL"):
+        resp(%* [])
+      db.select(employeeQuery, "workplace IS NULL LIMIT 5")
+      resp(%* employeeQuery)
+
+  get "/hireemployee/@businessID/@employeeID":
+    let code = request.cookies["code"]
+    if not accountExists(code):
+      resp Http400
+    withDb:
+
+      var userQuery = newUser()
+      db.select(userQuery, "code = $1", code)
+
+      var businessQuery = newBusiness()
+      if not db.exists(Business, "id = $1 AND owner = $2", @"businessID".parseInt(), userQuery.id):
+        resp Http400
+      db.select(businessQuery, "id = $1 AND owner = $2", @"businessID".parseInt(), userQuery.id)
+      
+      var employeeQuery = newEmployee()
+      if not db.exists(Employee, "id = $1 AND workplace IS NULL", @"employeeID".parseInt()):
+        resp Http400
+      db.select(employeeQuery, "id = $1", @"employeeID".parseInt())
+      
+      businessQuery.owner = some userQuery
+      employeeQuery.workplace = some businessQuery
+      db.update(employeeQuery)
+      resp Http200

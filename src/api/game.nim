@@ -1,6 +1,6 @@
 import jester
 import norm/[postgres]
-import std/json
+import std/[json, strutils]
 import "../models.nim"
 import "./business.nim"
 

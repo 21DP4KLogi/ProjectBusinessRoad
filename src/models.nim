@@ -57,3 +57,6 @@ proc accountExists*(code: string): bool =
 
 proc `%`*(psoc: PaddedStringOfCap): JsonNode =
   result = %($psoc)
+
+proc `%`*(soc: StringOfCap): JsonNode =
+  result = %($soc)
