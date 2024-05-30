@@ -80,11 +80,24 @@ async function logOut() {
   clearInterval(moneyInterval);
   $.get("/auth/logout")
     .done(() => getMainPage())
-    .fail(() => {
-      alert(
-        "Failed to request a logout, you may have to delete the cookie from the browser manually.",
-      );
-    });
+    // .fail(() => {
+    //   alert(
+    //     "Failed to request a logout, you may have to delete the cookie from the browser manually.",
+    //   );
+    // });
+}
+
+async function fullLogOut() {
+  clearInterval(moneyInterval);
+  $.get("/auth/secureLogout")
+    .done(() => getMainPage());
+}
+
+async function deleteAccount() {
+  clearInterval(moneyInterval);
+  const inputtedCode = $("#accountDeletion input").val();
+  $.get("/auth/deleteAccount", {code: inputtedCode})
+    .done(() => alert("Account " + inputtedCode + " deleted!"));
 }
 
 function createBusinessElement(id, field, value) {
