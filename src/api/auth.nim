@@ -62,17 +62,21 @@ router auth:
       if db.accountExistsWithCode(code):
         var userQuery = newUser()
         db.select(userQuery, "code = $1", code)
+
         var businessQuery = @[newBusiness()]
         var employeeQuery = @[newEmployee()]
+
         if db.exists(Business, "owner = $1", userQuery):
           db.select(businessQuery, "owner = $1", userQuery)
           for biz in businessQuery:
-            if not db.exists(Employee, "workplace = $1", biz):
-              continue
-            db.select(employeeQuery, "workplace = $1", biz)
-            for emp in employeeQuery:
-              emp.workplace = none Business
-            db.update(employeeQuery)
+
+            if db.exists(Employee, "workplace = $1 OR interview = $1", biz):
+              db.select(employeeQuery, "workplace = $1 OR interview = $1", biz)
+              for emp in employeeQuery:
+                emp.workplace = none Business
+                emp.interview = none Business
+
+              db.update(employeeQuery)
           db.delete(businessQuery)
         db.delete(userQuery)
         resp Http200
