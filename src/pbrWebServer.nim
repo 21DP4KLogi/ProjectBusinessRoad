@@ -1,8 +1,9 @@
 import jester
-import std/[segfaults, strutils, os, random, json, times]
+import std/[segfaults, strutils, sysrand, os, random, json, times, base64]
 import norm/[postgres, types]
 import zippy
 import dotenv
+import nimcrypto/[sha2, hmac]
 
 import "models.nim"
 

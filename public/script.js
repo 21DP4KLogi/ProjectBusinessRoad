@@ -40,11 +40,12 @@ function setStatusMessage(message, color) {
 async function LogIn() {
   const inputtedCode = $("#codeInput").val();
   const rememberMeBoxChecked = $("#SaveLoginCookieBox").is(":checked");
+  const altchaSolution = $("[name='altcha']").val() 
   if (inputtedCode.length != 8) {
     setStatusMessage("An account code is 8 characters long.", "warning");
     return;
   }
-  $.get("/auth/login", { code: inputtedCode, remember: rememberMeBoxChecked })
+  $.get("/auth/login", { code: inputtedCode, remember: rememberMeBoxChecked, altcha: altchaSolution })
     .done(() => {
       openGamePage();
     })
@@ -54,10 +55,11 @@ async function LogIn() {
 }
 
 async function RegisterAccount() {
+  const altchaSolution = $("[name='altcha']").val() 
   $("#registration > button")
     .text("Requesting new account...")
     .attr("disabled", true);
-  $.get("/auth/register", (data) => {
+  $.get("/auth/register", {altcha: altchaSolution}, (data) => {
     $("#registration > h1").text(data);
   })
     .done(() => {
@@ -95,8 +97,9 @@ async function fullLogOut() {
 
 async function deleteAccount() {
   clearInterval(moneyInterval);
+  const altchaSolution = $("[name='altcha']").val() 
   const inputtedCode = $("#accountDeletion input").val();
-  $.get("/auth/deleteAccount", {code: inputtedCode})
+  $.get("/auth/deleteAccount", {code: inputtedCode, altcha: altchaSolution})
     .done(() => alert("Account " + inputtedCode + " deleted!"));
 }
 
