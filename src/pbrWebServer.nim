@@ -1,5 +1,5 @@
 import jester
-import std/[segfaults, strutils, os, random, json]
+import std/[segfaults, strutils, os, random, json, times]
 import norm/[postgres, types]
 import zippy
 import dotenv

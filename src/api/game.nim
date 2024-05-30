@@ -1,6 +1,6 @@
 import jester
 import norm/[postgres]
-import std/[json, strutils]
+import std/[json, strutils, random, times]
 import "../models.nim"
 import "./business.nim"
 
@@ -9,11 +9,12 @@ router game:
   extend business, "/business"
 
   get "/money":
-    let code = request.cookies["code"]
-    if not accountExists(code):
-      resp Http400
-    var userQuery = newUser()
+    let token = request.cookies["token"]
     withDb:
-      db.select(userQuery, "code = $1", code)
-      resp $userQuery.money
+      if db.accountExistsWithToken(token):
+        var userQuery = newUser()
+        db.select(userQuery, "token = $1", token)
+        resp $userQuery.money
+      else:
+        resp Http400
 

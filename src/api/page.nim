@@ -7,6 +7,7 @@ const MOTDs* = [
   "moneymoneymoneymoneymoneymoneymoneymoneymoneymoney",
   "Finest business simulator since UNDEFINED!",
   "Generic but somewhat exciting description!",
+  "Generates interest!",
 ]
 
 router page:
