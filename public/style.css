@@ -17,13 +17,26 @@ body {
       margin: 0;
       font-size: 4vh;
     }
+    h2 {
+      margin: 0;
+      margin-left: 2rem;
+      font-size: 3vh;
+      text-align: left;
+      max-width: 15vw;
+    }
     p {
       margin: 0;
       padding-left: 1rem;
     }
   }
+  #moneyCounter {
+    font-size: 3rem;
+    flex: 2;
+    flex-grow: 5;
+  }
   button {
     flex: 1;
+    flex-grow: 2;
     margin: 1rem;
     height: 60%;
     border-width: 0.5vh;
@@ -38,6 +51,52 @@ body {
 
 #bottomhalf {
   display: flex;
+  #businessBar {
+    height: 90vh;
+    flex: 2;
+    overflow-y: auto;
+    background-color: rgb(76, 177, 122); 
+    #businessList {
+      div:nth-child(odd) {
+        background-color: rgb(96, 177, 102);
+      }
+      div:nth-child(even) {
+        background-color: rgb(96, 177, 122);
+      }
+      .businessCard {
+        display: flex;
+        height: 15vh;
+        flex-direction: column;
+        text-align: center;
+        align-items: stretch;
+        h2 {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex: 2;
+          margin: 0;
+        }
+        p {
+          display: flex;
+          align-items: flex-end;
+          justify-content: left;
+          flex: 1;
+          margin: 0;
+        }
+      }
+    }
+    #newBusiness {
+      display: flex;
+      background-color: rgb(155, 127, 102);
+      height: 15vh;
+      text-align: center;
+      align-items: center;
+      h2 {
+        flex: 1;
+        margin: 0;
+      }
+    }
+  }
   #bottomleft {
     flex: 6;
     height: 90vh;
@@ -51,6 +110,9 @@ body {
     flex: 4;
     height: 90vh;
     background-color: rgb(76, 177, 122);
+    #newBusinessSelection {
+
+    }
   }
 }
 

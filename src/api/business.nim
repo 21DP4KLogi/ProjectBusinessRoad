@@ -32,8 +32,36 @@ router business:
       var businessQuery = @[newBusiness()]
       var userQuery = newUser()
       db.select(userQuery, "token = $1", token)
-      db.select(businessQuery, "owner = $1", userQuery.id)
-      resp(%* businessQuery)
+      db.select(businessQuery, "owner = $1", userQuery)
+      resp(%* {"businesses": businessQuery})
+
+  get "/inspectbusiness/@businessID":
+    let token = request.cookies["token"]
+    withDb:
+      if not db.accountExistsWithToken(token):
+        resp Http400
+
+      var userQuery = newUser()
+      var businessQuery = newBusiness()
+      var employeeQueryWorking = @[newEmployee()]
+      var employeeQueryPotential = @[newEmployee()]
+
+      db.select(userQuery, "token = $1", token)
+      if not db.exists(Business, "id = $1 AND owner = $2", @"businessID".parseInt, userQuery):
+        resp Http400
+      db.select(businessQuery, "id = $1", @"businessID".parseInt)
+
+      if db.exists(Employee, "workplace = $1", businessQuery):
+        db.select(employeeQueryWorking, "workplace = $1", businessQuery)
+      else:
+        employeeQueryWorking = @[]
+
+      if db.exists(Employee, "interview = $1", businessQuery):
+        db.select(employeeQueryPotential, "interview = $1", businessQuery)
+      else:
+        employeeQueryPotential = @[]
+
+      resp(%* {"business": businessQuery, "employees": employeeQueryWorking, "interviewees": employeeQueryPotential})
 
   get "/findemployees/@businessID":
     let token = request.cookies["token"]
@@ -62,9 +90,10 @@ router business:
         db.update(randomEmployee)
 
       businessQuery.workerSearch = epochTime()
+      businessQuery.owner = some userQuery
       db.update(businessQuery)
 
-      resp(%* availableWorkers)
+      resp(%* {"interviewees": availableWorkers})
 
   get "/hireemployee/@businessID/@employeeID":
     let token = request.cookies["token"]
