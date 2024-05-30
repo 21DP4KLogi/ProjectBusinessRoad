@@ -1,3 +1,8 @@
+/*
+  Project Business Road
+  AGPL-3.0-or-later
+  Source code available at https://github.com/21DP4KLogi/ProjectBusinessRoad/
+*/
 $(document).ready(() => {
   getMOTD();
 });

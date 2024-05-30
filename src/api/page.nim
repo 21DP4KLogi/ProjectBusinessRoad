@@ -8,6 +8,7 @@ const MOTDs* = [
   "Finest business simulator since UNDEFINED!",
   "Generic but somewhat exciting description!",
   "Generates interest!",
+  "Free (as in Libre) money!",
 ]
 
 router page:

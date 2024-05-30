@@ -22,3 +22,7 @@ To build the project, run:
 Make sure to set up your database and the enviroment by creating a .env file from the template and using your desired values.
 
 Should now be ready, just run both pbrWebServer and pbrGameLogicComputer.
+
+## License
+
+GNU Affero General Public License V3 or Later
