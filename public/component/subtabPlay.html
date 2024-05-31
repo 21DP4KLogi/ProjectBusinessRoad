@@ -1,5 +1,6 @@
 <div id="authPage">
   <h2>Authenticate to Business Road</h2>
+  <p>Apologies for the mess, but you need to verify this altcha to log in, register or delete account</p>
   <altcha-widget
     challengeurl="/auth/getAltcha"
     maxnumber="100001"
@@ -22,6 +23,7 @@
     <div id="register">
       <h3>Register</h3>
       <div id="registration">
+        <i>Keep this code secure!</i>
         <h1>........</h1>
         <button onclick="RegisterAccount()", class="infosubmitbutton">Register a new account</button>
       </div>
@@ -29,8 +31,13 @@
   </div>
   <div id="info">
     <p>
-      This part of the page contains information about authentication and the
-      pesky legal stuff.
+      Placeholder legal stuff: This site places a cookie on you when you log in, i think they can be classified
+      as "strictly necessary" even though they never really are, rather just convenient for me to program.
+      <br>
+      Data collected on you: well, the stuff you do ingame i suppose, businesses and their employees for now.
+      <br>
+      Data deletion: i have provided a delete button, but it is quite broken, so not quite reliable, but the database
+      will probably be wiped every once in while.
     </p>
   </div>
   <div id="accountDeletion">

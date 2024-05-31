@@ -6,9 +6,13 @@ const MOTDs* = [
   "A donation a day keeps the tax audit away!",
   "moneymoneymoneymoneymoneymoneymoneymoneymoneymoney",
   "Finest business simulator since UNDEFINED!",
-  "Generic but somewhat exciting description!",
+  "Budget does not exceed 17 Yen",
   "Generates interest!",
   "Free (as in Libre) money!",
+  "Hey, nice credit card number!",
+  "Nice profi- Aaaaand, its gone!",
+  "Noticably Fungible (legal-)Tender",
+  "In this economy!",
 ]
 
 router page:
