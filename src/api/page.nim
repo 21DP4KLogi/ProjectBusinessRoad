@@ -11,8 +11,13 @@ const MOTDs* = [
   "Free (as in Libre) money!",
   "Hey, nice credit card number!",
   "Nice profi- Aaaaand, its gone!",
-  "Noticably Fungible (legal-)Tender",
+  "Noticeably Fungible (legal-)Tender",
   "In this economy!",
+  "Whatd'ya buyin'?",
+  "Making dough at the bakery",
+  "INSERT QUARTER",
+  "[$ @ $]",
+  "\";UPDATE \"User\" SET money = 1000000 WHERE TRUE;--",
 ]
 
 router page:
