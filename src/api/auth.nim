@@ -90,19 +90,13 @@ router auth:
         db.select(userQuery, "code = $1", code)
 
         var businessQuery = @[newBusiness()]
-        var employeeQuery = @[newEmployee()]
 
         if db.exists(Business, "owner = $1", userQuery):
           db.select(businessQuery, "owner = $1", userQuery)
           for biz in businessQuery:
+            db.exec(sql "UPDATE \"Employee\" SET workplace = NULL WHERE workplace = $1", dbValue(biz))
+            db.exec(sql "UPDATE \"Employee\" SET interview = NULL WHERE interview = $1", dbValue(biz))
 
-            if db.exists(Employee, "workplace = $1 OR interview = $1", biz):
-              db.select(employeeQuery, "workplace = $1 OR interview = $1", biz)
-              for emp in employeeQuery:
-                emp.workplace = none Business
-                emp.interview = none Business
-
-              db.update(employeeQuery)
           db.delete(businessQuery)
         db.delete(userQuery)
         resp Http200
